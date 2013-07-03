@@ -116,6 +116,46 @@ public :
    virtual void         SetDz(Double_t) {}
    void                 SetShared(Bool_t flag=kTRUE) {SetBit(kGeoShared, flag);}
    
+   // vec stubs
+   virtual void         MasterToLocal_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoMatrix::MasterToLocal(&master[3*k], &local[3*k]);
+       }
+   }
+   virtual void         MasterToLocalVect_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoMatrix::MasterToLocalVect(&master[3*k], &local[3*k]);
+       }
+   }
+   virtual void         MasterToLocalBomb_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoMatrix::MasterToLocalBomb(&master[3*k], &local[3*k]);
+       }
+   }
+   
+   virtual void         LocalToMaster_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoMatrix::LocalToMaster(&master[3*k], &local[3*k]);
+       }
+   }
+   virtual void         LocalToMasterVect_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoMatrix::LocalToMasterVect(&master[3*k], &local[3*k]);
+       }
+   }
+   virtual void         LocalToMasterBomb_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoMatrix::LocalToMasterBomb(&master[3*k], &local[3*k]);
+       }
+   }
+
+
    ClassDef(TGeoMatrix, 1)                 // base geometrical transformation class
 };
 
@@ -168,6 +208,46 @@ public :
    virtual const Double_t    *GetTranslation() const {return &fTranslation[0];}
    virtual const Double_t    *GetRotationMatrix() const {return &kIdentityMatrix[0];}
    virtual const Double_t    *GetScale()       const {return &kUnitScale[0];}
+
+  // vec stubs
+   virtual void         MasterToLocal_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoTranslation::MasterToLocal(&master[3*k], &local[3*k]);
+       }
+   }
+   virtual void         MasterToLocalVect_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoTranslation::MasterToLocalVect(&master[3*k], &local[3*k]);
+       }
+   }
+   virtual void         MasterToLocalBomb_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoTranslation::MasterToLocalBomb(&master[3*k], &local[3*k]);
+       }
+   }
+   
+   virtual void         LocalToMaster_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoTranslation::LocalToMaster(&master[3*k], &local[3*k]);
+       }
+   }
+   virtual void         LocalToMasterVect_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoTranslation::LocalToMasterVect(&master[3*k], &local[3*k]);
+       }
+   }
+   virtual void         LocalToMasterBomb_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoTranslation::LocalToMasterBomb(&master[3*k], &local[3*k]);
+       }
+   }
+
 
    ClassDef(TGeoTranslation, 1)                 // translation class
 };
@@ -234,6 +314,48 @@ public :
    virtual const Double_t    *GetRotationMatrix() const {return &fRotationMatrix[0];}
    virtual const Double_t    *GetScale()          const {return &kUnitScale[0];}
 
+
+  // vec stubs
+   virtual void         MasterToLocal_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoRotation::MasterToLocal(&master[3*k], &local[3*k]);
+       }
+   }
+   virtual void         MasterToLocalVect_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoRotation::MasterToLocalVect(&master[3*k], &local[3*k]);
+       }
+   }
+   virtual void         MasterToLocalBomb_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoRotation::MasterToLocalBomb(&master[3*k], &local[3*k]);
+       }
+   }
+   
+   virtual void         LocalToMaster_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoRotation::LocalToMaster(&master[3*k], &local[3*k]);
+       }
+   }
+   virtual void         LocalToMasterVect_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoRotation::LocalToMasterVect(&master[3*k], &local[3*k]);
+       }
+   }
+   virtual void         LocalToMasterBomb_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoRotation::LocalToMasterBomb(&master[3*k], &local[3*k]);
+       }
+   }
+
+
+
    ClassDef(TGeoRotation, 1)               // rotation class
 };
 
@@ -255,7 +377,9 @@ public :
    TGeoScale(Double_t sx, Double_t sy, Double_t sz);
    TGeoScale(const char *name, Double_t sx, Double_t sy, Double_t sz);
    virtual ~TGeoScale();
-   
+
+   // TGeoScale& operator=(const TGeoScale &other);   
+ 
    virtual TGeoMatrix&  Inverse() const;
    void                 SetScale(Double_t sx, Double_t sy, Double_t sz);
    virtual void         LocalToMaster(const Double_t *local, Double_t *master) const;
@@ -272,6 +396,48 @@ public :
    virtual const Double_t    *GetTranslation()    const {return &kNullVector[0];}
    virtual const Double_t    *GetRotationMatrix() const {return &kIdentityMatrix[0];}
    virtual const Double_t    *GetScale()          const {return &fScale[0];}
+
+
+
+  // vec stubs
+   virtual void         MasterToLocal_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoScale::MasterToLocal(&master[3*k], &local[3*k]);
+       }
+   }
+   virtual void         MasterToLocalVect_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoScale::MasterToLocalVect(&master[3*k], &local[3*k]);
+       }
+   }
+   virtual void         MasterToLocalBomb_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoScale::MasterToLocalBomb(&master[3*k], &local[3*k]);
+       }
+   }
+   
+   virtual void         LocalToMaster_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoScale::LocalToMaster(&master[3*k], &local[3*k]);
+       }
+   }
+   virtual void         LocalToMasterVect_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoScale::LocalToMasterVect(&master[3*k], &local[3*k]);
+       }
+   }
+   virtual void         LocalToMasterBomb_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoScale::LocalToMasterBomb(&master[3*k], &local[3*k]);
+       }
+   }
+
 
    ClassDef(TGeoScale, 1)                 // scaling class
 };
@@ -327,6 +493,48 @@ public :
    virtual const Double_t    *GetTranslation()    const {return &fTranslation[0];}
    virtual const Double_t    *GetRotationMatrix() const;
    virtual const Double_t    *GetScale()          const {return &kUnitScale[0];}
+
+
+  // vec stubs
+   virtual void         MasterToLocal_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoCombiTrans::MasterToLocal(&master[3*k], &local[3*k]);
+       }
+   }
+   virtual void         MasterToLocalVect_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoCombiTrans::MasterToLocalVect(&master[3*k], &local[3*k]);
+       }
+   }
+   virtual void         MasterToLocalBomb_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoCombiTrans::MasterToLocalBomb(&master[3*k], &local[3*k]);
+       }
+   }
+   
+   virtual void         LocalToMaster_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoCombiTrans::LocalToMaster(&master[3*k], &local[3*k]);
+       }
+   }
+   virtual void         LocalToMasterVect_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoCombiTrans::LocalToMasterVect(&master[3*k], &local[3*k]);
+       }
+   }
+   virtual void         LocalToMasterBomb_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoCombiTrans::LocalToMasterBomb(&master[3*k], &local[3*k]);
+       }
+   }
+
+
 
    ClassDef(TGeoCombiTrans, 1)            // rotation + translation
 };
@@ -393,6 +601,46 @@ public :
    virtual const Double_t    *GetRotationMatrix() const {return &kIdentityMatrix[0];}
    virtual const Double_t    *GetScale()       const {return &kUnitScale[0];}
    virtual void         SavePrimitive(std::ostream &, Option_t * = "") {;}
+
+
+  // vec stubs
+   virtual void         MasterToLocal_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoIdentity::MasterToLocal(&master[3*k], &local[3*k]);
+       }
+   }
+   virtual void         MasterToLocalVect_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoIdentity::MasterToLocalVect(&master[3*k], &local[3*k]);
+       }
+   }
+   virtual void         MasterToLocalBomb_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoIdentity::MasterToLocalBomb(&master[3*k], &local[3*k]);
+       }
+   }
+   
+   virtual void         LocalToMaster_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoIdentity::LocalToMaster(&master[3*k], &local[3*k]);
+       }
+   }
+   virtual void         LocalToMasterVect_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoIdentity::LocalToMasterVect(&master[3*k], &local[3*k]);
+       }
+   }
+   virtual void         LocalToMasterBomb_l(Double_t const *master, Double_t *local, unsigned int np) const {
+     for( unsigned int k=0; k< np; ++k)
+       {
+	 this->TGeoIdentity::LocalToMasterBomb(&master[3*k], &local[3*k]);
+       }
+   }
 
    ClassDef(TGeoIdentity, 1)                 // identity transformation class
 };

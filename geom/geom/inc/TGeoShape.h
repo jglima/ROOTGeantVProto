@@ -126,6 +126,13 @@ public:
    virtual Bool_t        GetPointsOnSegments(Int_t npoints, Double_t *array) const = 0;
    virtual Int_t         GetFittingBox(const TGeoBBox *parambox, TGeoMatrix *mat, Double_t &dx, Double_t &dy, Double_t &dz) const = 0;
    Int_t                 GetId() const  {return fShapeId;}
+
+   // to access the BBox parameters
+   virtual Double_t      GetDX() const = 0;
+   virtual Double_t      GetDY() const = 0;
+   virtual Double_t      GetDZ() const = 0;
+
+
    virtual TGeoShape    *GetMakeRuntimeShape(TGeoShape *mother, TGeoMatrix *mat) const  = 0;
    virtual void          GetMeshNumbers(Int_t &/*nvert*/, Int_t &/*nsegs*/, Int_t &/*npols*/) const {;}
    virtual const char   *GetName() const;
@@ -170,9 +177,9 @@ public:
 
    // vector_stubs
    virtual void Contains_l( Double_t const *, Bool_t *, Int_t ){}; 
-   virtual void Safety_l( Double_t const *, Bool_t inside, Double_t * safe , Int_t vecsize ){};
-   virtual void DistFromInside_l( Double_t const *point, Double_t const *dir, Int_t iact, Double_t const * step, Double_t *safe, Double_t * dist, Int_t vecsize ){};
-   virtual void DistFromOutside_l( Double_t const *point, Double_t const *dir, Int_t iact, Double_t const * step, Double_t *safe, Double_t * dist, Int_t vecsize ){};
+   virtual void Safety_l( Double_t const *, Bool_t , Double_t *  , Int_t ){};
+   virtual void DistFromInside_l( Double_t const *, Double_t const *, Int_t , Double_t const * , Double_t *, Double_t *, Int_t ){};
+   virtual void DistFromOutside_l( Double_t const *, Double_t const *, Int_t , Double_t const * , Double_t *, Double_t *, Int_t ){};
 
    
    ClassDef(TGeoShape, 2)           // base class for shapes
