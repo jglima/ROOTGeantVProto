@@ -88,6 +88,29 @@ public:
    virtual void          SetSegsAndPols(TBuffer3D &buff) const;
    virtual void          Sizeof3D() const;
 
+   // vec stubs
+   virtual void Contains_l( Double_t const *point, Bool_t * isin , Int_t vecsize ) {
+         for(unsigned int k=0;k < vecsize; ++k){
+               isin[k]= TGeoPgon::Contains( (Double_t *) &point[3*k] );
+         }
+   }
+   virtual void Safety_l( Double_t const *point, Bool_t inside, Double_t * safe , Int_t vecsize ) {
+         for(unsigned int k=0;k < vecsize; ++k){
+               safe[k]= TGeoPgon::Safety( (Double_t *) &point[3*k], inside );
+         }
+   }
+   virtual void DistFromInside_l( Double_t const *point, Double_t const *dir, Int_t iact, Double_t const * step, Double_t *safe , Double_t * dist, Int_t vecsize ) {
+         for(unsigned int k=0;k < vecsize; ++k){
+               dist[k]= TGeoPgon::DistFromInside( (Double_t *) &point[3*k], (Double_t *) &dist[3*k], 3, step[k] , 0 );
+         }
+   }
+   virtual void DistFromOutside_l( Double_t const *point, Double_t const *dir, Int_t iact, Double_t const * step, Double_t *safe , Double_t * dist, Int_t vecsize ) {
+         for(unsigned int k=0;k < vecsize; ++k){
+               dist[k]= TGeoPgon::DistFromOutside( (Double_t *) &point[3*k], (Double_t *) &dist[3*k], 3, step[k] , 0 );
+         }
+   }
+
+
    ClassDef(TGeoPgon, 1)         // polygone class 
 };
 

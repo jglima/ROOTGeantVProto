@@ -166,6 +166,14 @@ public:
    Bool_t   TestShapeBit(UInt_t f) const { return (Bool_t) ((fShapeBits & f) != 0); }
    Int_t    TestShapeBits(UInt_t f) const { return (Int_t) (fShapeBits & f); }
    void     InvertShapeBit(UInt_t f) { fShapeBits ^= f & kBitMask32; }
+
+
+   // vector_stubs
+   virtual void Contains_l( Double_t const *, Bool_t *, Int_t ){}; 
+   virtual void Safety_l( Double_t const *, Bool_t inside, Double_t * safe , Int_t vecsize ){};
+   virtual void DistFromInside_l( Double_t const *point, Double_t const *dir, Int_t iact, Double_t const * step, Double_t *safe, Double_t * dist, Int_t vecsize ){};
+   virtual void DistFromOutside_l( Double_t const *point, Double_t const *dir, Int_t iact, Double_t const * step, Double_t *safe, Double_t * dist, Int_t vecsize ){};
+
    
    ClassDef(TGeoShape, 2)           // base class for shapes
 };

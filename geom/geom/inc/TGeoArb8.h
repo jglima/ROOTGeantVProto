@@ -105,6 +105,27 @@ public:
    virtual void          SetPoints(Float_t *points) const;
    virtual void          Sizeof3D() const;
 
+   virtual void Contains_l( Double_t const *point, Bool_t * isin , Int_t vecsize ) {
+         for(unsigned int k=0;k < vecsize; ++k){
+               isin[k]= TGeoArb8::Contains( (Double_t *) &point[3*k] );
+         }
+   }
+   virtual void Safety_l( Double_t const *point, Bool_t inside, Double_t * safe , Int_t vecsize ) {
+         for(unsigned int k=0;k < vecsize; ++k){
+               safe[k]= TGeoArb8::Safety( (Double_t *) &point[3*k], inside );
+         }
+   }
+   virtual void DistFromInside_l( Double_t const *point, Double_t const *dir, Int_t iact, Double_t const * step, Double_t *safe , Double_t * dist, Int_t vecsize ) {
+         for(unsigned int k=0;k < vecsize; ++k){
+               dist[k]= TGeoArb8::DistFromInside( (Double_t *) &point[3*k], (Double_t *) &dist[3*k], 3, step[k] , 0 );
+         }
+   }
+   virtual void DistFromOutside_l( Double_t const *point, Double_t const *dir, Int_t iact, Double_t const * step, Double_t *safe , Double_t * dist, Int_t vecsize ) {
+         for(unsigned int k=0;k < vecsize; ++k){
+               dist[k]= TGeoArb8::DistFromOutside( (Double_t *) &point[3*k], (Double_t *) &dist[3*k], 3, step[k] , 0 );
+         }
+   }
+
    ClassDef(TGeoArb8, 1)         // arbitrary trapezoid with 8 vertices
 };
 
@@ -171,6 +192,27 @@ public:
    virtual Double_t      Safety(Double_t *point, Bool_t in=kTRUE) const;
    virtual void          SavePrimitive(std::ostream &out, Option_t *option = "");
 
+   virtual void Contains_l( Double_t const *point, Bool_t * isin , Int_t vecsize ) {
+         for(unsigned int k=0;k < vecsize; ++k){
+               isin[k]= TGeoTrap::Contains( (Double_t *) &point[3*k] );
+         }
+   }
+   virtual void Safety_l( Double_t const *point, Bool_t inside, Double_t * safe , Int_t vecsize ) {
+         for(unsigned int k=0;k < vecsize; ++k){
+               safe[k]= TGeoTrap::Safety( (Double_t *) &point[3*k], inside );
+         }
+   }
+   virtual void DistFromInside_l( Double_t const *point, Double_t const *dir, Int_t iact, Double_t const * step, Double_t *safe , Double_t * dist, Int_t vecsize ) {
+         for(unsigned int k=0;k < vecsize; ++k){
+               dist[k]= TGeoTrap::DistFromInside( (Double_t *) &point[3*k], (Double_t *) &dist[3*k], 3, step[k] , 0 );
+         }
+   }
+   virtual void DistFromOutside_l( Double_t const *point, Double_t const *dir, Int_t iact, Double_t const * step, Double_t *safe , Double_t * dist, Int_t vecsize ) {
+         for(unsigned int k=0;k < vecsize; ++k){
+               dist[k]= TGeoTrap::DistFromOutside( (Double_t *) &point[3*k], (Double_t *) &dist[3*k], 3, step[k] , 0 );
+         }
+   }
+
    ClassDef(TGeoTrap, 1)         // G3 TRAP shape
 };
 
@@ -214,6 +256,28 @@ public:
    virtual Double_t      Safety(Double_t *point, Bool_t in=kTRUE) const;
    virtual void          SetDimensions(Double_t *param);
    virtual void          SavePrimitive(std::ostream &out, Option_t *option = "");
+
+   virtual void Contains_l( Double_t const *point, Bool_t * isin , Int_t vecsize ) {
+         for(unsigned int k=0;k < vecsize; ++k){
+               isin[k]= TGeoGtra::Contains( (Double_t *) &point[3*k] );
+         }
+   }
+   virtual void Safety_l( Double_t const *point, Bool_t inside, Double_t * safe , Int_t vecsize ) {
+         for(unsigned int k=0;k < vecsize; ++k){
+               safe[k]= TGeoGtra::Safety( (Double_t *) &point[3*k], inside );
+         }
+   }
+   virtual void DistFromInside_l( Double_t const *point, Double_t const *dir, Int_t iact, Double_t const * step, Double_t *safe , Double_t * dist, Int_t vecsize ) {
+         for(unsigned int k=0;k < vecsize; ++k){
+               dist[k]= TGeoGtra::DistFromInside( (Double_t *) &point[3*k], (Double_t *) &dist[3*k], 3, step[k] , 0 );
+         }
+   }
+   virtual void DistFromOutside_l( Double_t const *point, Double_t const *dir, Int_t iact, Double_t const * step, Double_t *safe , Double_t * dist, Int_t vecsize ) {
+         for(unsigned int k=0;k < vecsize; ++k){
+               dist[k]= TGeoGtra::DistFromOutside( (Double_t *) &point[3*k], (Double_t *) &dist[3*k], 3, step[k] , 0 );
+         }
+   }
+
  
    ClassDef(TGeoGtra, 1)         // G3 GTRA shape
 };
