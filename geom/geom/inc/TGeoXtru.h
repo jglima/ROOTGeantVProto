@@ -131,12 +131,12 @@ public:
    }
    virtual void DistFromInside_l( Double_t const *point, Double_t const *dir, Int_t iact, Double_t const * step, Double_t *safe , Double_t * dist, Int_t vecsize ) {
          for(unsigned int k=0;k < vecsize; ++k){
-               dist[k]= TGeoXtru::DistFromInside( (Double_t *) &point[3*k], (Double_t *) &dist[3*k], 3, step[k] , 0 );
+               dist[k]= TGeoXtru::DistFromInside( (Double_t *) &point[3*k], (Double_t *) &dir[3*k], 3, step[k] , 0 );
          }
    }
    virtual void DistFromOutside_l( Double_t const *point, Double_t const *dir, Int_t iact, Double_t const * step, Double_t *safe , Double_t * dist, Int_t vecsize ) {
          for(unsigned int k=0;k < vecsize; ++k){
-               dist[k]= TGeoXtru::DistFromOutside( (Double_t *) &point[3*k], (Double_t *) &dist[3*k], 3, step[k] , 0 );
+               dist[k]= TGeoXtru::DistFromOutside( (Double_t *) &point[3*k], (Double_t *) &dir[3*k], 3, step[k] , 0 );
          }
    }
 
