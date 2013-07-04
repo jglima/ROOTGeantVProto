@@ -204,6 +204,8 @@ public :
    Bool_t                 PopPoint(Int_t index) {fCurrentOverlapping=fCache->PopState(fNmany,index, fPoint); fCurrentNode=fCache->GetNode(); fLevel=fCache->GetLevel(); fGlobalMatrix=fCache->GetCurrentMatrix();return fCurrentOverlapping;}
    void                   PopDummy(Int_t ipop=9999) {fCache->PopDummy(ipop);}
    
+   void                   SetNode(TGeoNode *node) {fCurrentNode=node;}
+
    ClassDef(TGeoNavigator, 0)          // geometry navigator class
 };
 
