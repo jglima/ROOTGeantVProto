@@ -30,6 +30,8 @@
 #include "Rtypes.h"
 #endif
 
+#include <cmath>
+
 namespace TMath {
 
    // Abs
@@ -113,7 +115,10 @@ inline Float_t TMath::Abs(Float_t d)
    { return (d >= 0) ? d : -d; }
 
 inline Double_t TMath::Abs(Double_t d)
-   { return (d >= 0) ? d : -d; }
+   { 
+     //  return (d >= 0) ? d : -d; 
+     return fabs(d);
+   }
 
 //---- Sign --------------------------------------------------------------------
 

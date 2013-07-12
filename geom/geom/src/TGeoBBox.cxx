@@ -83,7 +83,7 @@
 #include "TBuffer3DTypes.h"
 #include "TMath.h"
 #include "TRandom.h"
-
+#include <cmath>
 ClassImp(TGeoBBox)
    
 //_____________________________________________________________________________
@@ -279,6 +279,7 @@ void TGeoBBox::ComputeBBox()
 }   
 
 //_____________________________________________________________________________
+/*
 Bool_t TGeoBBox::Contains(Double_t *point) const
 {
 // Test if point is inside this shape.
@@ -287,6 +288,17 @@ Bool_t TGeoBBox::Contains(Double_t *point) const
    if (TMath::Abs(point[1]-fOrigin[1]) > fDY) return kFALSE;
    return kTRUE;
 }
+*/
+
+Bool_t TGeoBBox::Contains(Double_t *point) const
+{
+// Test if point is inside this shape.
+   if (fabs(point[2]) > fDZ) return kFALSE;
+   if (fabs(point[0]) > fDX) return kFALSE;
+   if (fabs(point[1]) > fDY) return kFALSE;
+   return kTRUE;
+}
+
 
 //_____________________________________________________________________________
 Bool_t TGeoBBox::Contains(const Double_t *point, Double_t dx, Double_t dy, Double_t dz, const Double_t *origin)
@@ -299,29 +311,21 @@ Bool_t TGeoBBox::Contains(const Double_t *point, Double_t dx, Double_t dy, Doubl
 }
 
 //_____________________________________________________________________________
-Double_t TGeoBBox::DistFromInside(Double_t *point, Double_t *dir, Int_t iact, Double_t step, Double_t *safe) const
+Double_t TGeoBBox::DistFromInside(Double_t *point, Double_t *dir, Int_t /**/, Double_t step, Double_t * /**/) const
 {
 // Compute distance from inside point to surface of the box.
 // Boundary safe algorithm.
    Double_t s,smin,saf[6];
    Double_t newpt[3];
    Int_t i;
-   for (i=0; i<3; i++) newpt[i] = point[i] - fOrigin[i];
+   for (i=0; i<3; i++) newpt[i] = point[i];// - fOrigin[i];
    saf[0] = fDX+newpt[0];
    saf[1] = fDX-newpt[0];
    saf[2] = fDY+newpt[1];
    saf[3] = fDY-newpt[1];
    saf[4] = fDZ+newpt[2];
    saf[5] = fDZ-newpt[2];
-   if (iact<3 && safe) {
-      smin = saf[0];
-      // compute safe distance
-      for (i=1;i<6;i++) if (saf[i] < smin) smin = saf[i];
-      *safe = smin;
-      if (smin<0) *safe = 0.0;
-      if (iact==0) return TGeoShape::Big();
-      if (iact==1 && step<*safe) return TGeoShape::Big();
-   }
+ 
    // compute distance to surface
    smin=TGeoShape::Big();
    for (i=0; i<3; i++) {
@@ -363,7 +367,7 @@ Double_t TGeoBBox::DistFromInside(const Double_t *point,const Double_t *dir,
 }
 
 //_____________________________________________________________________________
-Double_t TGeoBBox::DistFromOutside(Double_t *point, Double_t *dir, Int_t iact, Double_t step, Double_t *safe) const
+Double_t TGeoBBox::DistFromOutside(Double_t *point, Double_t *dir, Int_t /**/, Double_t step, Double_t * /**/) const
 {
 // Compute distance from outside point to surface of the box.
 // Boundary safe algorithm.
@@ -372,7 +376,7 @@ Double_t TGeoBBox::DistFromOutside(Double_t *point, Double_t *dir, Int_t iact, D
    Double_t par[3];
    Double_t newpt[3];
    Int_t i,j;
-   for (i=0; i<3; i++) newpt[i] = point[i] - fOrigin[i];
+   for (i=0; i<3; i++) newpt[i] = point[i];// - fOrigin[i];
    par[0] = fDX;
    par[1] = fDY;
    par[2] = fDZ;
@@ -381,18 +385,7 @@ Double_t TGeoBBox::DistFromOutside(Double_t *point, Double_t *dir, Int_t iact, D
       if (saf[i]>=step) return TGeoShape::Big();
       if (in && saf[i]>0) in=kFALSE;
    }   
-   if (iact<3 && safe) {
-      // compute safe distance
-      if (in) {
-         *safe = 0.0;
-      } else {   
-         *safe = saf[0];
-         if (saf[1] > *safe) *safe = saf[1];
-         if (saf[2] > *safe) *safe = saf[2];
-      }   
-      if (iact==0) return TGeoShape::Big();
-      if (iact==1 && step<*safe) return TGeoShape::Big();
-   }
+ 
    // compute distance from point to box
    Double_t coord, snxt=TGeoShape::Big();
    Int_t ibreak=0;
