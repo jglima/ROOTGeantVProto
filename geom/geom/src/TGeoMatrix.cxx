@@ -351,6 +351,47 @@ void TGeoMatrix::LocalToMaster(const Double_t *local, Double_t *master) const
    }
 }
 
+
+//_______________________________________________________________________________
+void TGeoMatrix::LocalToMaster_v(StructOfCoord const & __restrict__ local, StructOfCoord & __restrict__ master, Int_t np) const
+{
+// convert a point by multiplying its column vector (x, y, z, 1) to matrix inverse
+   if (IsIdentity()) {
+     memcpy(master.x, local.x, sizeof(double)*np);
+     memcpy(master.y, local.y, sizeof(double)*np);
+     memcpy(master.z, local.z, sizeof(double)*np);
+      return;
+   }
+   const Double_t *tr = GetTranslation(); // note the specifier TGeoMatrix because this should not be a virtual function call
+   if (!IsRotation()) {
+     Int_t k;
+     
+     // this should vectorize
+#pragma ivdep
+     for( k=0; k<np;k++ )
+       {
+	 master.x[k] = tr[0] + local.x[k];
+	 master.y[k] = tr[1] + local.y[k];
+	 master.z[k] = tr[2] + local.z[k];
+       }
+     return;
+   }   
+   const Double_t *rot = GetRotationMatrix();
+
+   Int_t k;
+    // this should vectorize
+#pragma ivdep
+   for(k=0; k<np; k++)
+     {
+       // unrolled version
+       master.x[k] = tr[0] + local.x[k]*rot[0]  + local.y[k]*rot[1] + local.z[k]*rot[2]; // i=0;
+       master.y[k] = tr[1] + local.x[k]*rot[3]  + local.y[k]*rot[4] + local.z[k]*rot[5]; // i=1;
+       master.z[k] = tr[2] + local.x[k]*rot[6]  + local.y[k]*rot[7] + local.z[k]*rot[8]; // i=1;
+     }
+}
+
+
+
 //_____________________________________________________________________________
 void TGeoMatrix::LocalToMasterVect(const Double_t *local, Double_t *master) const
 {
@@ -366,6 +407,32 @@ void TGeoMatrix::LocalToMasterVect(const Double_t *local, Double_t *master) cons
                 + local[2]*rot[3*i+2];
    }
 }
+
+//_____________________________________________________________________________
+void TGeoMatrix::LocalToMasterVect_v(StructOfCoord const & __restrict__ local, StructOfCoord  & __restrict__ master, Int_t np) const
+{
+// convert a point by multiplying its column vector (x, y, z, 1) to matrix
+   if (!IsRotation()) {
+     memcpy(master.x, local.x, sizeof(double)*np);
+      memcpy(master.y, local.y, sizeof(double)*np);
+      memcpy(master.z, local.z, sizeof(double)*np);
+      return;
+   }
+   const Double_t *rot = GetRotationMatrix();
+
+#pragma ivdep
+   for( Int_t k=0;k<np;k++ )
+     {
+       Double_t lt0  = local.x[k];
+       Double_t lt1  = local.y[k];
+       Double_t lt2  = local.z[k];
+       
+       master.x[k] = lt0*rot[0] + lt1*rot[1] + lt2*rot[2];
+       master.y[k] = lt0*rot[3] + lt1*rot[4] + lt2*rot[5];
+       master.z[k] = lt0*rot[6] + lt1*rot[7] + lt2*rot[8];
+     } 
+}
+
 
 //_____________________________________________________________________________
 void TGeoMatrix::LocalToMasterBomb(const Double_t *local, Double_t *master) const
@@ -416,6 +483,162 @@ void TGeoMatrix::MasterToLocal(const Double_t *master, Double_t *local) const
    local[2] = mt0*rot[2] + mt1*rot[5] + mt2*rot[8];
 }
 
+
+
+//_____________________________________________________________________________
+void TGeoMatrix::MasterToLocal_v(StructOfCoord const & __restrict__ master, StructOfCoord & __restrict__ local, Int_t np) const
+{
+// convert a point by multiplying its column vector (x, y, z, 1) to matrix
+   if (IsIdentity()) {
+     memcpy(local.x, master.x, sizeof(double)*np);
+      memcpy(local.y, master.y, sizeof(double)*np);
+      memcpy(local.z, master.z, sizeof(double)*np);
+      return;
+   }
+   
+   const Double_t *tr  = GetTranslation();
+   if (!IsRotation()) {
+#pragma ivdep
+     for( Int_t k=0;k<np;k++ )
+       {
+	 Double_t mt0  = master.x[k]-tr[0];
+	 Double_t mt1  = master.y[k]-tr[1];
+	 Double_t mt2  = master.z[k]-tr[2];
+	 
+	 local.x[k] = mt0;
+	 local.y[k] = mt1;
+	 local.z[k] = mt2;
+       }   
+     return;
+   }
+
+   const Double_t *rot = GetRotationMatrix();
+#pragma ivdep
+   for( Int_t k=0;k<np;k++ )
+     {
+       Double_t mt0  = master.x[k]-tr[0];
+       Double_t mt1  = master.y[k]-tr[1];
+       Double_t mt2  = master.z[k]-tr[2];
+       
+       local.x[k] = mt0*rot[0] + mt1*rot[3] + mt2*rot[6];
+       local.y[k] = mt0*rot[1] + mt1*rot[4] + mt2*rot[7];
+       local.z[k] = mt0*rot[2] + mt1*rot[5] + mt2*rot[8];
+     }
+}
+
+void TGeoMatrix::MasterToLocalCombined_v(StructOfCoord const & __restrict__ masterp, StructOfCoord & __restrict__ localp, StructOfCoord const & __restrict__ mastervec, StructOfCoord & __restrict__ localvec, Int_t np) const
+{
+// convert a point by multiplying its column vector (x, y, z, 1) to matrix
+   if (IsIdentity()) {
+      memcpy(localp.x, masterp.x, sizeof(double)*np);
+      memcpy(localp.y, masterp.y, sizeof(double)*np);
+      memcpy(localp.z, masterp.z, sizeof(double)*np);
+      memcpy(localvec.x, mastervec.x, sizeof(double)*np);
+      memcpy(localvec.y, mastervec.y, sizeof(double)*np);
+      memcpy(localvec.z, mastervec.z, sizeof(double)*np);
+      return;
+   }
+   
+   const Double_t * __restrict__ tr  = GetTranslation();
+   if (!IsRotation()) {
+#pragma ivdep
+#pragma vector always
+     for( Int_t k=0;k<np;k++ )
+       {
+	 Double_t mt0  = masterp.x[k]-tr[0];
+	 Double_t mt1  = masterp.y[k]-tr[1];
+	 Double_t mt2  = masterp.z[k]-tr[2];
+	 
+	 localp.x[k] = mt0;
+	 localp.y[k] = mt1;
+	 localp.z[k] = mt2;
+	 
+	 localvec.x[k]=mastervec.x[k];
+	 localvec.y[k]=mastervec.y[k];
+	 localvec.z[k]=mastervec.z[k];
+       }   
+     return;
+   }
+
+   const Double_t * __restrict__ rot = GetRotationMatrix();
+   #pragma ivdep
+   #pragma vector always
+   for( Int_t k=0;k<np;k++ )
+     {
+       Double_t mt0  = masterp.x[k]-tr[0];
+       Double_t mt1  = masterp.y[k]-tr[1];
+       Double_t mt2  = masterp.z[k]-tr[2];
+       Double_t mt0v  = mastervec.x[k];
+       Double_t mt1v  = mastervec.y[k];
+       Double_t mt2v  = mastervec.z[k];
+             
+       localp.x[k] = mt0*rot[0] + mt1*rot[3] + mt2*rot[6];
+       localvec.x[k] = mt0v*rot[0] + mt1v*rot[3] + mt2v*rot[6];
+       localp.y[k] = mt0*rot[1] + mt1*rot[4] + mt2*rot[7];
+       localvec.y[k] = mt0v*rot[1] + mt1v*rot[4] + mt2v*rot[7];
+       localp.z[k] = mt0*rot[2] + mt1*rot[5] + mt2*rot[8];
+       localvec.z[k] = mt0v*rot[2] + mt1v*rot[5] + mt2v*rot[8];
+     }
+}
+
+
+void TGeoMatrix::LocalToMasterCombined_v(StructOfCoord const & __restrict__ localp, StructOfCoord & __restrict__ masterp, StructOfCoord const & __restrict__ localvec, StructOfCoord & __restrict__ mastervec, Int_t np) const
+{
+// convert a point by multiplying its column vector (x, y, z, 1) to matrix
+   if (IsIdentity()) {
+     memcpy(masterp.x, localp.x, sizeof(double)*np);
+     memcpy(masterp.y, localp.y, sizeof(double)*np);
+     memcpy(masterp.z, localp.z, sizeof(double)*np);
+     memcpy(mastervec.x, localvec.x, sizeof(double)*np);
+     memcpy(mastervec.y, localvec.y, sizeof(double)*np);
+     memcpy(mastervec.z, localvec.z, sizeof(double)*np);
+      return;
+   }
+   
+   const Double_t *tr  = GetTranslation();
+   if (!IsRotation()) {
+#pragma ivdep
+     for( Int_t k=0;k<np;k++ )
+       {
+	 Double_t lt0  = localp.x[k]+tr[0];
+	 Double_t lt1  = localp.y[k]+tr[1];
+	 Double_t lt2  = localp.z[k]+tr[2];
+	 
+	 masterp.x[k] = lt0;
+	 masterp.y[k] = lt1;
+	 masterp.z[k] = lt2;
+	 
+	 mastervec.x[k]=localvec.x[k];
+	 mastervec.y[k]=localvec.y[k];
+	 mastervec.z[k]=localvec.z[k];
+       }   
+     return;
+   }
+
+   const Double_t *rot = GetRotationMatrix();
+#pragma ivdep
+   for( Int_t k=0;k<np;k++ )
+     {
+       Double_t lt0  = localp.x[k]+tr[0];
+       Double_t lt1  = localp.y[k]+tr[1];
+       Double_t lt2  = localp.z[k]+tr[2];
+       Double_t lt0v  = localvec.x[k];
+       Double_t lt1v  = localvec.y[k];
+       Double_t lt2v  = localvec.z[k];
+             
+       masterp.x[k] = lt0*rot[0] + lt1*rot[1] + lt2*rot[2];
+       mastervec.x[k] = lt0v*rot[0] + lt1v*rot[1] + lt2v*rot[2];
+
+       masterp.y[k] = lt0*rot[3] + lt1*rot[4] + lt2*rot[5];
+       mastervec.y[k] = lt0v*rot[3] + lt1v*rot[4] + lt2v*rot[4];
+
+       masterp.z[k] = lt0*rot[6] + lt1*rot[7] + lt2*rot[8];
+       mastervec.z[k] = lt0v*rot[6] + lt1v*rot[7] + lt2v*rot[8];
+     }
+}
+
+
+
 //_____________________________________________________________________________
 void TGeoMatrix::MasterToLocalVect(const Double_t *master, Double_t *local) const
 {
@@ -431,6 +654,33 @@ void TGeoMatrix::MasterToLocalVect(const Double_t *master, Double_t *local) cons
                + master[2]*rot[i+6];
    }
 }
+
+//_____________________________________________________________________________
+void TGeoMatrix::MasterToLocalVect_v(StructOfCoord const & __restrict__ master, StructOfCoord  & __restrict__ local, Int_t np) const
+{
+// convert a point by multiplying its column vector (x, y, z, 1) to matrix
+   if (!IsRotation()) {
+     memcpy(local.x, master.x, sizeof(double)*np);
+     memcpy(local.y, master.y, sizeof(double)*np);
+     memcpy(local.z, master.z, sizeof(double)*np);
+     return;
+   }   
+   const Double_t *rot = GetRotationMatrix();
+#pragma ivdep
+   for( Int_t k=0;k<np;k++ ) 
+     {
+       Double_t mt0  = master.x[k];
+       Double_t mt1  = master.y[k];
+       Double_t mt2  = master.z[k];
+       
+       local.x[k] = mt0*rot[0] + mt1*rot[3] + mt2*rot[6];
+       local.y[k] = mt0*rot[1] + mt1*rot[4] + mt2*rot[7];
+       local.z[k] = mt0*rot[2] + mt1*rot[5] + mt2*rot[8];
+     } 
+}
+
+
+
 
 //_____________________________________________________________________________
 void TGeoMatrix::MasterToLocalBomb(const Double_t *master, Double_t *local) const
@@ -688,6 +938,26 @@ void TGeoTranslation::LocalToMaster(const Double_t *local, Double_t *master) con
       master[i] = tr[i] + local[i]; 
 }
 
+
+//_____________________________________________________________________________
+void TGeoTranslation::LocalToMaster_v(StructOfCoord const & __restrict__ local, StructOfCoord & __restrict__ master, Int_t np) const
+{
+// convert a point by multiplying its column vector (x, y, z, 1) to matrix inverse
+  const Double_t *tr = TGeoTranslation::GetTranslation();
+  
+   Int_t k;
+   // this should vectorize
+#pragma ivdep
+   for( k=0; k<np;k++ )
+     {
+       master.x[k] = tr[0] + local.x[k];
+       master.y[k] = tr[1] + local.y[k];
+       master.z[k] = tr[2] + local.z[k];
+     }
+   return;
+}
+
+
 //_____________________________________________________________________________
 void TGeoTranslation::LocalToMasterVect(const Double_t *local, Double_t *master) const
 {
@@ -714,6 +984,23 @@ void TGeoTranslation::MasterToLocal(const Double_t *master, Double_t *local) con
    for (Int_t i=0; i<3; i++) 
       local[i] =  master[i]-tr[i];
 }
+
+
+//_____________________________________________________________________________
+void TGeoTranslation::MasterToLocal_v(StructOfCoord const & __restrict__ master, StructOfCoord & __restrict__ local, Int_t np) const
+{
+// convert a point by multiplying its column vector (x, y, z, 1) to matrix
+  const Double_t *tr = TGeoTranslation::GetTranslation();
+
+#pragma ivdep
+  for(Int_t k=0; k < np; k++)
+    {
+      local.x[k] =  master.x[k]-tr[0];
+      local.y[k] =  master.y[k]-tr[1];
+      local.z[k] =  master.z[k]-tr[2];
+    }
+}
+
 
 //_____________________________________________________________________________
 void TGeoTranslation::MasterToLocalVect(const Double_t *master, Double_t *local) const
@@ -905,17 +1192,57 @@ void TGeoRotation::LocalToMaster(const Double_t *local, Double_t *master) const
    }
 }
 
+
+//_____________________________________________________________________________
+void TGeoRotation::LocalToMaster_v(StructOfCoord const & __restrict__ local, StructOfCoord & __restrict__ master, Int_t np) const
+{
+// convert a point by multiplying its column vector (x, y, z, 1) to matrix inverse
+  const Double_t *rot = TGeoRotation::GetRotationMatrix();
+   Int_t k;
+   // this should vectorize
+#pragma ivdep
+   for(k=0; k<np; k++)
+     {
+       // unrolled version
+       master.x[k] = local.x[k]*rot[0]  + local.y[k]*rot[1] + local.z[k]*rot[2]; // i=0;
+       master.y[k] = local.x[k]*rot[3]  + local.y[k]*rot[4] + local.z[k]*rot[5]; // i=1;
+       master.z[k] = local.x[k]*rot[6]  + local.y[k]*rot[7] + local.z[k]*rot[8]; // i=1;
+     }
+}
+
+
+
 //_____________________________________________________________________________
 void TGeoRotation::MasterToLocal(const Double_t *master, Double_t *local) const
 {
 // convert a point by multiplying its column vector (x, y, z, 1) to matrix
-   const Double_t *rot = GetRotationMatrix();
-   for (Int_t i=0; i<3; i++) {
-      local[i] = master[0]*rot[i]
-               + master[1]*rot[i+3]
-               + master[2]*rot[i+6];
-   }
+  const Double_t *rot = TGeoRotation::GetRotationMatrix();
+  for (Int_t i=0; i<3; i++) {
+    local[i] = master[0]*rot[i]
+      + master[1]*rot[i+3]
+      + master[2]*rot[i+6];
+  }
 }
+
+
+//_____________________________________________________________________________
+void TGeoRotation::MasterToLocal_v(StructOfCoord const & __restrict__ master, StructOfCoord & __restrict__ local, Int_t np) const
+{
+  // convert a point by multiplying its column vector (x, y, z, 1) to matrix
+  const Double_t *rot = TGeoRotation::GetRotationMatrix();
+#pragma ivdep
+  for( Int_t k=0;k<np;k++ )
+    {
+      Double_t mt0  = master.x[k];
+      Double_t mt1  = master.y[k];
+      Double_t mt2  = master.z[k];
+      
+      local.x[k] = mt0*rot[0] + mt1*rot[3] + mt2*rot[6];
+      local.y[k] = mt0*rot[1] + mt1*rot[4] + mt2*rot[7];
+      local.z[k] = mt0*rot[2] + mt1*rot[5] + mt2*rot[8];
+    }
+}
+
 
 //_____________________________________________________________________________
 TGeoMatrix *TGeoRotation::MakeClone() const
@@ -1311,6 +1638,20 @@ void TGeoScale::LocalToMaster(const Double_t *local, Double_t *master) const
 }
 
 //_____________________________________________________________________________
+void TGeoScale::LocalToMaster_v(StructOfCoord const & __restrict__ local, StructOfCoord & __restrict__ master, Int_t np) const
+{
+// Convert a local point to the master frame.
+#pragma ivdep
+  for(Int_t k=0;k<np;k++)
+    {
+      master.x[k] = local.x[k]*fScale[0];
+      master.y[k] = local.y[k]*fScale[1];
+      master.z[k] = local.z[k]*fScale[2];
+    }
+}
+
+
+//_____________________________________________________________________________
 Double_t TGeoScale::LocalToMaster(Double_t dist, const Double_t *dir) const
 {
 // Convert the local distance along unit vector DIR to master frame. If DIR
@@ -1345,6 +1686,19 @@ void TGeoScale::MasterToLocal(const Double_t *master, Double_t *local) const
    local[0] = master[0]/fScale[0];
    local[1] = master[1]/fScale[1];
    local[2] = master[2]/fScale[2];
+}
+
+//_____________________________________________________________________________
+void TGeoScale::MasterToLocal_v(StructOfCoord const & __restrict__ master, StructOfCoord & __restrict__ local, Int_t np) const
+{
+#pragma ivdep
+  for(Int_t k=0;k < np;k++)
+    {
+      // Convert a global point to local frame.
+      local.x[k] = master.z[k]/fScale[0];
+      local.y[k] = master.y[k]/fScale[1];
+      local.z[k] = master.z[k]/fScale[2];
+    }
 }
 
 //_____________________________________________________________________________
