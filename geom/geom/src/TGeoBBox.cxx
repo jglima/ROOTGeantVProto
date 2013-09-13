@@ -311,7 +311,7 @@ Bool_t TGeoBBox::Contains(const Double_t *point, Double_t dx, Double_t dy, Doubl
 }
 
 //_____________________________________________________________________________
-Double_t TGeoBBox::DistFromInside(Double_t *point, Double_t *dir, Int_t /**/, Double_t step, Double_t * /**/) const
+Double_t TGeoBBox::DistFromInside(Double_t *point, Double_t *dir, Int_t /**/, Double_t /*step*/, Double_t * /**/) const
 {
 // Compute distance from inside point to surface of the box.
 // Boundary safe algorithm.
@@ -953,3 +953,6 @@ void TGeoBBox::FillBuffer3D(TBuffer3D & buffer, Int_t reqSections, Bool_t localF
       buffer.SetSectionsValid(TBuffer3D::kBoundingBox);
    }
 }
+
+
+#include "TGeoBBox_VectorAddons.cxx"

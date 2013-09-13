@@ -46,3 +46,5 @@
                dist[k]= TGeoBBox::DistFromOutside( point, dir, 3, step[k] , 0 );
          }
    }
+
+   virtual void DistFromOutsideSOA_v( StructOfCoord  const & pointi, StructOfCoord  const & diri, Int_t /*iact*/, Double_t const * step, Double_t * /*safe*/ , Double_t * dist, Int_t vecsize );
