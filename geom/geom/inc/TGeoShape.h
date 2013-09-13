@@ -16,6 +16,8 @@
 #include "TNamed.h"
 #endif
 
+#include "PointStruct.h"
+
 // forward declarations
 class TGeoBoolCombinator;
 class TGeoBBox;
@@ -176,11 +178,7 @@ public:
 
 
    // vector_stubs
-   virtual void Contains_l( Double_t const *, Bool_t *, Int_t ){}; 
-   virtual void Safety_l( Double_t const *, Bool_t , Double_t *  , Int_t ){};
-   virtual void DistFromInside_l( Double_t const *, Double_t const *, Int_t , Double_t const * , Double_t *, Double_t *, Int_t ){};
-   virtual void DistFromOutside_l( Double_t const *, Double_t const *, Int_t , Double_t const * , Double_t *, Double_t *, Int_t ){};
-
+#include "TGeoShape_VectorAddons.inc"
    
    ClassDef(TGeoShape, 2)           // base class for shapes
 };

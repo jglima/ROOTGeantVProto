@@ -92,27 +92,8 @@ public:
    virtual void          SetSegsAndPols(TBuffer3D &buff) const;
    virtual void          Sizeof3D() const;
 
-   virtual void Contains_l( Double_t const *point, Bool_t * isin , Int_t vecsize ) {
-         for(unsigned int k=0;k < vecsize; ++k){
-               isin[k]= TGeoTorus::Contains( (Double_t *) &point[3*k] );
-         }
-   }
-   virtual void Safety_l( Double_t const *point, Bool_t inside, Double_t * safe , Int_t vecsize ) {
-         for(unsigned int k=0;k < vecsize; ++k){
-               safe[k]= TGeoTorus::Safety( (Double_t *) &point[3*k], inside );
-         }
-   }
-   virtual void DistFromInside_l( Double_t const *point, Double_t const *dir, Int_t iact, Double_t const * step, Double_t *safe , Double_t * dist, Int_t vecsize ) {
-         for(unsigned int k=0;k < vecsize; ++k){
-               dist[k]= TGeoTorus::DistFromInside( (Double_t *) &point[3*k], (Double_t *) &dir[3*k], 3, step[k] , 0 );
-         }
-   }
-   virtual void DistFromOutside_l( Double_t const *point, Double_t const *dir, Int_t iact, Double_t const * step, Double_t *safe , Double_t * dist, Int_t vecsize ) {
-         for(unsigned int k=0;k < vecsize; ++k){
-               dist[k]= TGeoTorus::DistFromOutside( (Double_t *) &point[3*k], (Double_t *) &dir[3*k], 3, step[k] , 0 );
-         }
-   }
 
+#include "TGeoTorus_VectorAddons.inc"
    ClassDef(TGeoTorus, 1)         // torus class
 
 };

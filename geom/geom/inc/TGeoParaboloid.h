@@ -85,6 +85,7 @@ public:
    virtual void          SetSegsAndPols(TBuffer3D &buff) const;
    virtual void          Sizeof3D() const;
 
+#include "TGeoParaboloid_VectorAddons.inc"
    ClassDef(TGeoParaboloid, 1)         // paraboloid class
 
 };
