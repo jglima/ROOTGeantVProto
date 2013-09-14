@@ -46,3 +46,25 @@
                dist[k]= TGeoShapeAssembly::DistFromOutside( point, dir, 3, step[k] , 0 );
          }
    }
+
+
+// REAL VECTOR INTERFACES: THIS IMPLEMENTATION SHOULD BE GRADUALLY MOVED SOMEWHERE ELSE 
+
+   virtual void DistFromInsideSOA_v( StructOfCoord const &  pointi, StructOfCoord const &  diri, Int_t /*iact*/ , Double_t const * step, Double_t * /*safe*/ , Double_t * dist, Int_t vecsize ) const {
+         for( int k=0;k < vecsize; ++k){
+               double point[3]; point[0]=pointi.x[k];point[1]=pointi.y[k];point[2]=pointi.z[k];
+               double dir[3]; dir[0]=diri.x[k];dir[1]=diri.y[k];dir[2]=diri.z[k];
+               dist[k]= TGeoShapeAssembly::DistFromInside( point, dir, 3, step[k] , 0 );
+         }
+   }
+
+
+// REAL VECTOR INTERFACES: THIS IMPLEMENTATION SHOULD BE GRADUALLY MOVED SOMEWHERE ELSE 
+
+   virtual void DistFromOutsideSOA_v( StructOfCoord  const & pointi, StructOfCoord  const & diri, Int_t /*iact*/, Double_t const * step, Double_t * /*safe*/ , Double_t * dist, Int_t vecsize ) const {
+         for( int k=0;k < vecsize; ++k){
+               double point[3]; point[0]=pointi.x[k];point[1]=pointi.y[k];point[2]=pointi.z[k];
+               double dir[3]; dir[0]=diri.x[k];dir[1]=diri.y[k];dir[2]=diri.z[k];
+               dist[k]= TGeoShapeAssembly::DistFromOutside( point, dir, 3, step[k] , 0 );
+         }
+   }
