@@ -47,4 +47,8 @@
          }
    }
 
-   virtual void DistFromOutsideSOA_v( StructOfCoord  const & pointi, StructOfCoord  const & diri, Int_t /*iact*/, Double_t const * step, Double_t * /*safe*/ , Double_t * dist, Int_t vecsize );
+   virtual void DistFromOutsideSOA_v( StructOfCoord  const & pointi, StructOfCoord  const & diri, Int_t /*iact*/, Double_t const * step, Double_t * /*safe*/ , Double_t * dist, Int_t vecsize ) const;
+
+   static void DistFromOutsideS_v(StructOfCoord const & point, StructOfCoord const & dir, 
+                          double dx, double dy, double dz, const double *origin, const double * stepmax, double * distance, int np);
+

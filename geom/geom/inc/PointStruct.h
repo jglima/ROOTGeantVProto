@@ -55,10 +55,10 @@ public:
       }
   }
 
-  void alloc(int np)
+  void alloc(int n)
   {
 #ifndef __CINT__
-    this->np=np;
+    this->np=n;
     xvec=(double*)_mm_malloc(sizeof(double)*np,32); // aligned malloc (32 for AVX )
     yvec=(double*)_mm_malloc(sizeof(double)*np,32);
     zvec=(double*)_mm_malloc(sizeof(double)*np,32);

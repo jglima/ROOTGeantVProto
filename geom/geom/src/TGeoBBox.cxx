@@ -955,4 +955,3 @@ void TGeoBBox::FillBuffer3D(TBuffer3D & buffer, Int_t reqSections, Bool_t localF
 }
 
 
-#include "TGeoBBox_VectorAddons.cxx"

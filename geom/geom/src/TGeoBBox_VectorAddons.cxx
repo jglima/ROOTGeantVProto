@@ -1,13 +1,17 @@
 #ifndef __CINT__
 #include "Vc/vector.h"
+#include "PointStruct.h"
 #endif
+
+#include "TGeoBBox.h"
 
 typedef Vc::double_v vd; // short for vector double
 
-void TGeoBBox::DistFromOutside_v(StructOfCoord const & point, StructOfCoord const & dir, Int_t iact, 
+
+void TGeoBBox::DistFromOutsideSOA_v(StructOfCoord const & point, StructOfCoord const & dir, Int_t iact, 
 			Double_t const * step, Double_t *safe, Double_t * distance , Int_t np) const 
 {
-  TGeoBBox_v::DistFromOutsideS_v(point, dir, this->TGeoBBox::GetDX(), this->TGeoBBox::GetDY(), this->TGeoBBox::GetDZ(), this->TGeoBBox::GetOrigin(),  step, distance, np );
+  TGeoBBox::DistFromOutsideS_v(point, dir, this->TGeoBBox::GetDX(), this->TGeoBBox::GetDY(), this->TGeoBBox::GetDZ(), this->TGeoBBox::GetOrigin(),  step, distance, np );
 }
 
 
@@ -84,7 +88,7 @@ void TGeoBBox::DistFromOutsideS_v(StructOfCoord const & point, StructOfCoord con
       vd dirz(&dir.z[i]);
       vd s(&stepmax[i]);
       vd dist(0.);
-      DistFromOutsideS_kernel( x, y, z, dirx, diry, dirz, dx, dy, dz, vcorigin, s, dist );
+      kernel( x, y, z, dirx, diry, dirz, dx, dy, dz, vcorigin, s, dist );
       dist.store(&distance[i]);
    }
    // do the tail part for the moment, we just call the old static version
@@ -92,7 +96,9 @@ void TGeoBBox::DistFromOutsideS_v(StructOfCoord const & point, StructOfCoord con
      {
        double p[3]={point.x[np-tailsize+i], point.y[np-tailsize+i], point.z[np-tailsize+i]};
        double d[3]={dir.x[np-tailsize+i], dir.y[np-tailsize+i], dir.z[np-tailsize+i]};
-       distance[np-tailsize+i]=TGeoBBox_v::DistFromOutsideS(p, d, dx, dy, dz, origin, stepmax[np-tailsize+i] );
+
+       //
+       distance[np-tailsize+i]=TGeoBBox::DistFromOutside(p, d, dx, dy, dz, origin, stepmax[np-tailsize+i] );
      }
 #endif
 }

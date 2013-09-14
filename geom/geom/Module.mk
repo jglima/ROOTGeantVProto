@@ -34,7 +34,7 @@ GEOMH1       := TGeoAtt.h TGeoStateInfo.h TGeoBoolNode.h \
                 TGeoScaledShape.h TVirtualGeoPainter.h TVirtualGeoTrack.h \
 		TGeoPolygon.h TGeoXtru.h TGeoPhysicalNode.h \
                 TGeoHelix.h TGeoParaboloid.h TGeoElement.h TGeoHalfSpace.h \
-                TGeoBuilder.h TGeoNavigator.h
+                TGeoBuilder.h TGeoNavigator.h PointStruct.h
 GEOMH2       := TGeoPatternFinder.h TGeoCache.h TVirtualMagField.h \
                 TGeoUniformMagField.h TGeoGlobalMagField.h TGeoBranchArray.h \
                 TGeoExtension.h 
@@ -48,7 +48,7 @@ GEOMO        := $(call stripsrc,$(GEOMS:.cxx=.o))
 
 GEOMDEP      := $(GEOMO:.o=.d) $(GEOMDO:.o=.d)
 
-GEOMLIB      := $(LPATH)/libGeom.$(SOEXT)
+GEOMLIB      := $(LPATH)/libGeantVGeom.$(SOEXT)
 GEOMMAP      := $(GEOMLIB:.$(SOEXT)=.rootmap)
 
 # used in the main Makefile
@@ -59,7 +59,12 @@ ALLMAPS     += $(GEOMMAP)
 # include all dependency files
 INCLUDEFILES += $(GEOMDEP)
 
+
+
+
 ##### local rules #####
+$(GEOMO): CXXFLAGS += -I/home/swenzel/local/vc/include -std=c++11 -fabi-version=6
+
 .PHONY:         all-$(MODNAME) clean-$(MODNAME) distclean-$(MODNAME)
 
 include/%.h:    $(GEOMDIRI)/%.h
@@ -67,8 +72,8 @@ include/%.h:    $(GEOMDIRI)/%.h
 
 $(GEOMLIB):     $(GEOMO) $(GEOMDO) $(ORDER_) $(MAINLIBS) $(GEOMLIBDEP)
 		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
-		   "$(SOFLAGS)" libGeom.$(SOEXT) $@ "$(GEOMO) $(GEOMDO)" \
-		   "$(GEOMLIBEXTRA) $(OSTHREADLIBDIR) $(OSTHREADLIB)"
+		   "$(SOFLAGS)" libGeantVGeom.$(SOEXT) $@ "$(GEOMO) $(GEOMDO)" \
+		   "$(GEOMLIBEXTRA) /home/swenzel/local/vc/lib/libVc.a $(OSTHREADLIBDIR) $(OSTHREADLIB)"
 
 $(GEOMDS1):     $(GEOMH1) $(GEOML1) $(ROOTCINTTMPDEP)
 		$(MAKEDIR)
