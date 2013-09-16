@@ -13,10 +13,10 @@
 
 // REAL VECTOR INTERFACES: THIS IMPLEMENTATION SHOULD BE GRADUALLY MOVED SOMEWHERE ELSE 
 
-   virtual void DistFromInsideSOA_v( StructOfCoord const &  pointi, StructOfCoord const &  diri, Int_t /*iact*/ , Double_t const * step, Double_t * /*safe*/ , Double_t * dist, Int_t vecsize ) =0;
+   virtual void DistFromInsideSOA_v( StructOfCoord const &  pointi, StructOfCoord const &  diri, Int_t /*iact*/ , Double_t const * step, Double_t * /*safe*/ , Double_t * dist, Int_t vecsize ) const =0;
  
 
 // REAL VECTOR INTERFACES: THIS IMPLEMENTATION SHOULD BE GRADUALLY MOVED SOMEWHERE ELSE 
 
-   virtual void DistFromOutsideSOA_v( StructOfCoord  const & pointi, StructOfCoord  const & diri, Int_t /*iact*/, Double_t const * step, Double_t * /*safe*/ , Double_t * /* dist */, Int_t vecsize ) =0;
+   virtual void DistFromOutsideSOA_v( StructOfCoord  const & pointi, StructOfCoord  const & diri, Int_t /*iact*/, Double_t const * step, Double_t * /*safe*/ , Double_t * /* dist */, Int_t vecsize ) const =0;
  

@@ -104,3 +104,58 @@ void TGeoBBox::DistFromOutsideS_v(StructOfCoord const & point, StructOfCoord con
 }
 
 
+// SOA version____________________________________________________________________________
+void TGeoBBox::DistFromInsideS_v(const StructOfCoord & __restrict__ point,const StructOfCoord & __restrict__ dir, 
+				      Double_t dx, Double_t dy, Double_t dz, const Double_t *__restrict__ origin, const Double_t *__restrict__ stepmax, Double_t *__restrict__ distance, int npoints )
+{
+#ifndef __INTEL_COMPILER 
+  const double * x = (const double *) __builtin_assume_aligned (point.x, 32); 
+  const double * y = (const double *) __builtin_assume_aligned (point.y, 32); 
+  const double * z = (const double *) __builtin_assume_aligned (point.z, 32); 
+  const double * dirx = (const double *) __builtin_assume_aligned (dir.x, 32); 
+  const double * diry = (const double *) __builtin_assume_aligned (dir.y, 32); 
+  const double * dirz = (const double *) __builtin_assume_aligned (dir.z, 32); 
+  double * dist = (double *) __builtin_assume_aligned (distance, 32); 
+#else
+  const double * x = (const double *) point.x; 
+  const double * y = (const double *) point.y; 
+  const double * z = (const double *) point.z; 
+  const double * dirx = (const double *) dir.x; 
+  const double * diry = (const double *) dir.y; 
+  const double * dirz = (const double *) dir.z; 
+#endif
+
+  // this and the previous should be the same; here I have done manual inlining
+#pragma vector aligned
+  for(size_t k=0; k<npoints; ++k) //@EXPECTVEC
+    {
+      Double_t s,smin,saf[6];
+      Double_t newpt[3];
+
+      newpt[0] = x[k] - origin[0];
+      saf[0] = dx + newpt[0];
+      saf[1] = dx - newpt[0];
+      newpt[1] = y[k] - origin[1];
+      saf[2] = dy + newpt[1];
+      saf[3] = dy - newpt[1];
+      newpt[2] = z[k] - origin[2];
+      saf[4] = dz + newpt[2];
+      saf[5] = dz - newpt[2];
+      
+      smin=TGeoShape::Big();
+      double sx, sy, sz;
+      double tiny=1e-20;
+      sx = (dirx[k]>0)? (saf[1]/(dirx[k]+tiny)):(-saf[0]/(dirx[k]-tiny));
+      sy = (diry[k]>0)? (saf[3]/(diry[k]+tiny)):(-saf[2]/(diry[k]-tiny));
+      sz = (dirz[k]>0)? (saf[5]/(dirz[k]+tiny)):(-saf[4]/(dirz[k]-tiny));
+      //      sx = (saf[1]/(std::fabs(dirx[k])+tiny));
+      //      sy = (saf[3]/(std::fabs(diry[k])+tiny));
+      //      sz = (saf[5]/(std::fabs(dirz[k])+tiny));
+
+      smin = sx;
+      smin = (sy < smin)? sy : smin;
+      smin = (sz < smin)? sz : smin;
+      distance[k] = (smin < 0)? 0 : smin;
+    }
+}
+
