@@ -174,6 +174,8 @@
 #include "TGeoMatrix.h"
 #include "TMath.h"
 
+#include "Vc/vector.h"
+
 TGeoIdentity *gGeoIdentity = 0;
 const Int_t kN3 = 3*sizeof(Double_t);
 const Int_t kN9 = 9*sizeof(Double_t);
@@ -540,6 +542,13 @@ void TGeoMatrix::MasterToLocalCombined_v(StructOfCoord const & __restrict__ mast
    }
    
    const Double_t * __restrict__ tr  = GetTranslation();
+
+   // this should be a class member;
+   typedef Vc::double_v vd;
+   vd tr0(tr[0]);
+   vd tr1(tr[1]);
+   vd tr2(tr[2]);
+
    if (!IsRotation()) {
 #pragma ivdep
 #pragma vector always
@@ -561,6 +570,19 @@ void TGeoMatrix::MasterToLocalCombined_v(StructOfCoord const & __restrict__ mast
    }
 
    const Double_t * __restrict__ rot = GetRotationMatrix();
+   vd rot0(rot[0]);
+   vd rot1(rot[1]);
+   vd rot2(rot[2]);
+   vd rot3(rot[3]);
+   vd rot4(rot[4]);
+   vd rot5(rot[5]);
+   vd rot6(rot[6]);
+   vd rot7(rot[7]);
+   vd rot8(rot[8]);
+   vd rot9(rot[9]);
+
+
+   /*
    #pragma ivdep
    #pragma vector always
    for( Int_t k=0;k<np;k++ )
@@ -579,7 +601,40 @@ void TGeoMatrix::MasterToLocalCombined_v(StructOfCoord const & __restrict__ mast
        localp.z[k] = mt0*rot[2] + mt1*rot[5] + mt2*rot[8];
        localvec.z[k] = mt0v*rot[2] + mt1v*rot[5] + mt2v*rot[8];
      }
+   */
+
+   // TODO: provide a tail version
+   for( Int_t k=0;k<np;k+=Vc::double_v::Size )
+     {
+       Vc::double_v mt0_v(&masterp.x[k]); mt0_v-=tr0;
+       // mt0  = masterp.x[k]-tr[0];
+       Vc::double_v mt1_v(&masterp.y[k]); mt1_v-=tr1;
+       Vc::double_v mt2_v(&masterp.z[k]); mt2_v-=tr[2];
+
+       Vc::double_v mt0v_v(&mastervec.x[k]);
+       Vc::double_v mt1v_v(&mastervec.y[k]);
+       Vc::double_v mt2v_v(&mastervec.z[k]);
+
+       Vc::double_v temp;
+       temp = mt0_v*rot0 + mt1_v*rot3 + mt2_v*rot6;
+       temp.store(&localp.x[k]);
+       //localp.x[k] = mt0*rot[0] + mt1*rot[3] + mt2*rot[6];
+       temp = mt0v_v*rot0 + mt1v_v*rot3 + mt2v_v*rot6;
+       temp.store(&localvec.x[k]);
+       //       localvec.x[k] = mt0v*rot[0] + mt1v*rot[3] + mt2v*rot[6];
+
+       temp=mt0_v*rot1 + mt1_v*rot4 + mt2_v*rot7;
+       temp.store(&localp.y[k]); 
+       temp=mt0v_v*rot1 + mt1v_v*rot4 + mt2v_v*rot7;
+       temp.store(&localvec.y[k]);
+
+       temp=mt0_v*rot2 + mt1_v*rot5 + mt2_v*rot8;
+       temp.store(&localp.z[k]);
+       temp=mt0v_v*rot2 + mt1v_v*rot5 + mt2v_v*rot8;
+       temp.store(&localvec.z[k]);
+     }
 }
+
 
 
 void TGeoMatrix::LocalToMasterCombined_v(StructOfCoord const & __restrict__ localp, StructOfCoord & __restrict__ masterp, StructOfCoord const & __restrict__ localvec, StructOfCoord & __restrict__ mastervec, Int_t np) const
