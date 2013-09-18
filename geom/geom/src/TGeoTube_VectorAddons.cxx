@@ -12,7 +12,7 @@ typedef Vc::double_v vd; // short for vector double
 typedef Vc::double_m vdm; // short for double mask 
 typedef Vc::int_v vi; // short for vector integer
 
-static vd tol_v = 1.E-10;
+static const vd tol_v = 1.E-10;
 
 struct VecUtil{
 static Vc::double_m IsSameWithinTolerance(Vc::double_v const & a, Vc::double_v const & b )
