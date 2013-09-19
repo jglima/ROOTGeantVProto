@@ -60,8 +60,8 @@
 
 
 // REAL VECTOR INTERFACES: THIS IMPLEMENTATION SHOULD BE GRADUALLY MOVED SOMEWHERE ELSE 
-   virtual void DistFromOutsideSOA_v( StructOfCoord  const & pointi, StructOfCoord  const & diri, Int_t /*iact*/, Double_t const * /*step*/, Double_t * /*safe*/ , Double_t * dist, Int_t vecsize ) const {
-   	   TGeoCone::DistFromOutsideS_v(pointi, diri, this->TGeoCone::GetDz(), this->TGeoCone::GetRmin1(), this->TGeoCone::GetRmax1(), this-> GetRmin2(), this->GetRmax2(), dist, vecsize);
+   virtual void DistFromOutsideSOA_v( StructOfCoord  const & pointi, StructOfCoord  const & diri, Int_t /*iact*/, Double_t const * step, Double_t * /*safe*/ , Double_t * dist, Int_t vecsize ) const {
+   	   TGeoCone::DistFromOutsideS_v(pointi, diri, this->TGeoCone::GetDz(), this->TGeoCone::GetRmin1(), this->TGeoCone::GetRmax1(), this-> GetRmin2(), this->GetRmax2(), step, dist, vecsize);
    }
 
-static void DistFromOutsideS_v(StructOfCoord const & pointi, StructOfCoord const & diri, Double_t dz, Double_t rminl, Double_t rmaxl, Double_t rminh, Double_t rmaxh, Double_t * distance, Int_t np);
+static void DistFromOutsideS_v(StructOfCoord const & pointi, StructOfCoord const & diri, Double_t dz, Double_t rminl, Double_t rmaxl, Double_t rminh, Double_t rmaxh, Double_t const *step, Double_t * distance, Int_t np);

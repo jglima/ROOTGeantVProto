@@ -6,6 +6,7 @@
 #endif
 
 #include "TGeoCone.h"
+#include "TGeoBBox.h"
 
 //#ifdef VEC_EXTENSIONS // REPEATED: WHERE CAN ALL THIS GO
 
@@ -52,8 +53,9 @@ void DistToCone_v(Vc::double_v const & x_v, Vc::double_v const & y_v, Vc::double
 }
 
 
-//_____________________________________________________________________________                                                              inline                      
-Vc::double_v DistFromOutsideS_Vc(Vc::double_v const & x_v, Vc::double_v const & y_v, Vc::double_v const & z_v, Vc::double_v const & dirx_v, Vc::double_v const & diry_v, Vc::double_v const & dirz_v, Double_t dz, Double_t rminl, Double_t rmaxl, Double_t rminh, Double_t rmaxh)
+//_____________________________________________________________________________                                                              
+inline                      
+Vc::double_v DistFromOutsideS_Vc(Vc::double_v const & x_v, Vc::double_v const & y_v, Vc::double_v const & z_v, Vc::double_v const & dirx_v, Vc::double_v const & diry_v, Vc::double_v const & dirz_v, Double_t dz, Double_t rminl, Double_t rmaxl, Double_t rminh, Double_t rmaxh, Vc::double_v const & step_v )
 {
   vd s_v(1.E30);
 
@@ -66,6 +68,18 @@ Vc::double_v DistFromOutsideS_Vc(Vc::double_v const & x_v, Vc::double_v const & 
 
   done_m = !inz_m && ((z_v * dirz_v) >=0); // Point outside the z-range and moving away
   if( done_m.isFull() ) return s_v;
+
+  // check if the particle hits the bounding box (USE OF STEP HERE)
+  // PARAMETERS NEEDED FOR THE VC IMPLEMENTATION OF THE DISTANCE TO THE BOUNDING BOX
+  vd fOrigin_v[3]={0., 0., 0.}; // we know that for the Cone the bounding box will be centered at origin with dimensions rmax, rmax, dz
+
+  Double_t rmax = TMath::Max(rmaxl, rmaxh);
+  vd sdist_v(1.E30);
+  // check bounding box
+  TGeoBBox::DistFromOutsideSOA_Vc(x_v, y_v, z_v, dirx_v, diry_v, dirz_v, rmax, rmax, dz, fOrigin_v, step_v, sdist_v);
+  done_m |= sdist_v >= step_v;
+  if( done_m.isFull() ) return s_v;
+
 
   s_v(!done_m) = (Vc::abs(z_v) - dz)/Vc::abs(dirz_v);
   vd xp_v = x_v + s_v * dirx_v;
@@ -165,7 +179,7 @@ Vc::double_v DistFromOutsideS_Vc(Vc::double_v const & x_v, Vc::double_v const & 
 }
 
 
-void TGeoCone::DistFromOutsideS_v(StructOfCoord const & pointi, StructOfCoord const & diri, Double_t dz, Double_t rminl, Double_t rmaxl, Double_t rminh, Double_t rmaxh, Double_t * distance, Int_t np)
+void TGeoCone::DistFromOutsideS_v(StructOfCoord const & pointi, StructOfCoord const & diri, Double_t dz, Double_t rminl, Double_t rmaxl, Double_t rminh, Double_t rmaxh, Double_t const * step, Double_t * distance, Int_t np)
 {
   int tailsize = np % Vc::double_v::Size; 
   
@@ -177,10 +191,11 @@ void TGeoCone::DistFromOutsideS_v(StructOfCoord const & pointi, StructOfCoord co
       vd dirx_v(&diri.x[i]);
       vd diry_v(&diri.y[i]);
       vd dirz_v(&diri.z[i]);
-      
+      vd step_v(&step[i]);
+
       vd dist_v(0.);
       
-      dist_v = DistFromOutsideS_Vc(x_v, y_v, z_v, dirx_v, diry_v, dirz_v, dz, rminl, rmaxl, rminh, rmaxh);
+      dist_v = DistFromOutsideS_Vc(x_v, y_v, z_v, dirx_v, diry_v, dirz_v, dz, rminl, rmaxl, rminh, rmaxh, step_v);
       
       // write the results for each particle
       dist_v.store(&distance[i]);
@@ -191,6 +206,8 @@ void TGeoCone::DistFromOutsideS_v(StructOfCoord const & pointi, StructOfCoord co
     {
       Double_t point[3] = {pointi.x[np-tailsize+i], pointi.y[np-tailsize+i], pointi.z[np-tailsize+i]};
       double dir[3] = {diri.x[np-tailsize+i], diri.y[np-tailsize+i], diri.z[np-tailsize+i]};
+
+      // this does not check the bounding box ...
       distance[np-tailsize+i] = TGeoCone::DistFromOutsideS(point, dir, dz, rminl, rmaxl, rminh, rmaxh);
     }
 }

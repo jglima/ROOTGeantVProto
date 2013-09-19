@@ -35,6 +35,7 @@ GEOMH1       := TGeoAtt.h TGeoStateInfo.h TGeoBoolNode.h \
 		TGeoPolygon.h TGeoXtru.h TGeoPhysicalNode.h \
                 TGeoHelix.h TGeoParaboloid.h TGeoElement.h TGeoHalfSpace.h \
                 TGeoBuilder.h TGeoNavigator.h PointStruct.h
+
 GEOMH2       := TGeoPatternFinder.h TGeoCache.h TVirtualMagField.h \
                 TGeoUniformMagField.h TGeoGlobalMagField.h TGeoBranchArray.h \
                 TGeoExtension.h 
@@ -63,7 +64,10 @@ INCLUDEFILES += $(GEOMDEP)
 
 
 ##### local rules #####
-$(GEOMO): CXXFLAGS += -I/home/swenzel/local/vc/include -std=c++11 -fabi-version=6
+$(GEOMO) : CXXFLAGS += -I/home/swenzel/local/vc/include -std=c++11 -fabi-version=6 -ffast-math -ftree-vectorize  -mavx -funroll-loops -finline-functions -findirect-inlining -finline-limit=100000
+$(GEOMDO): CXXFLAGS += -I/home/swenzel/local/vc/include -std=c++11 -fabi-version=6
+
+#$(GEOMO): CXXFLAGS += -I/home/swenzel/local/vc/include -std=c++11 -fabi-version=6 -Ofast -vec-report=2 -msse4.2
 
 .PHONY:         all-$(MODNAME) clean-$(MODNAME) distclean-$(MODNAME)
 

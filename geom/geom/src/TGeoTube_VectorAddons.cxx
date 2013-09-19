@@ -39,6 +39,7 @@ void DistToTube_Vc(Vc::double_v const & r2_v, Vc::double_v const & n2_v, Vc::dou
 }
 
 
+inline
 Vc::double_v DistFromInsideS_Vc(Vc::double_v const & x_v, Vc::double_v const & y_v, Vc::double_v const & z_v, Vc::double_v const & dirx_v, Vc::double_v const & diry_v, Vc::double_v const & dirz_v, Double_t rmin, Double_t rmax, Double_t dz)
 {
   // Compute distance from inside point to surface of the tube (static)                                                                                                                                  
@@ -212,7 +213,8 @@ void TGeoTube::DistFromInsideS_v(StructOfCoord const & pointi, StructOfCoord con
 
 
 // implicit kernel function_____________________________________________________________________________                                    
-inline                                                         
+//__attribute__((always_inline))                                                         
+inline
 Vc::double_v DistFromOutsideS_Vc(Vc::double_v const & x_v, Vc::double_v const & y_v, Vc::double_v const & z_v, Vc::double_v const & dirx_v, Vc::double_v const & diry_v, Vc::double_v const & dirz_v, Double_t rmin, Double_t rmax, Double_t dz) 
 {
   // Static method to compute distance from outside point to a tube with given parameters
