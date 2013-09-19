@@ -16,6 +16,10 @@
 #include "TGeoShape.h"
 #endif
 
+#ifndef __CINT__
+#include "Vc/vector.h"
+#endif
+
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                           //
 // TGeoBBox - box class. All shape primitives inherit from this, their       //
@@ -25,6 +29,7 @@
 //      fOrigin[3]    - position of box origin                               //
 //                                                                           //
 ///////////////////////////////////////////////////////////////////////////////
+
 
 class TGeoBBox : public TGeoShape
 {
