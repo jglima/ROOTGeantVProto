@@ -581,7 +581,6 @@ void TGeoMatrix::MasterToLocalCombined_v(StructOfCoord const & __restrict__ mast
    vd rot8(rot[8]);
    vd rot9(rot[9]);
 
-
    /*
    #pragma ivdep
    #pragma vector always
@@ -603,13 +602,13 @@ void TGeoMatrix::MasterToLocalCombined_v(StructOfCoord const & __restrict__ mast
      }
    */
 
-   // TODO: provide a tail version
-   for( Int_t k=0;k<np;k+=Vc::double_v::Size )
+   int tailsize =np % Vc::double_v::Size; 
+   for( Int_t k=0;k<np-tailsize;k+=Vc::double_v::Size )
      {
        Vc::double_v mt0_v(&masterp.x[k]); mt0_v-=tr0;
        // mt0  = masterp.x[k]-tr[0];
        Vc::double_v mt1_v(&masterp.y[k]); mt1_v-=tr1;
-       Vc::double_v mt2_v(&masterp.z[k]); mt2_v-=tr[2];
+       Vc::double_v mt2_v(&masterp.z[k]); mt2_v-=tr[2]; // this also works
 
        Vc::double_v mt0v_v(&mastervec.x[k]);
        Vc::double_v mt1v_v(&mastervec.y[k]);
@@ -628,11 +627,29 @@ void TGeoMatrix::MasterToLocalCombined_v(StructOfCoord const & __restrict__ mast
        temp=mt0v_v*rot1 + mt1v_v*rot4 + mt2v_v*rot7;
        temp.store(&localvec.y[k]);
 
-       temp=mt0_v*rot2 + mt1_v*rot5 + mt2_v*rot8;
+       temp=mt0_v*rot2 + mt1_v*rot5 + mt2_v*rot[8];
        temp.store(&localp.z[k]);
        temp=mt0v_v*rot2 + mt1v_v*rot5 + mt2v_v*rot8;
        temp.store(&localvec.z[k]);
      }
+   // this is for tail part (costs a branch)
+   for( Int_t k=0;k<tailsize;k++ )
+     {
+       Double_t mt0  = masterp.x[np-tailsize+k]-tr[0];
+       Double_t mt1  = masterp.y[np-tailsize+k]-tr[1];
+       Double_t mt2  = masterp.z[np-tailsize+k]-tr[2];
+       Double_t mt0v  = mastervec.x[np-tailsize+k];
+       Double_t mt1v  = mastervec.y[np-tailsize+k];
+       Double_t mt2v  = mastervec.z[np-tailsize+k];
+             
+       localp.x[np-tailsize+k] = mt0*rot[0] + mt1*rot[3] + mt2*rot[6];
+       localvec.x[np-tailsize+k] = mt0v*rot[0] + mt1v*rot[3] + mt2v*rot[6];
+       localp.y[np-tailsize+k] = mt0*rot[1] + mt1*rot[4] + mt2*rot[7];
+       localvec.y[np-tailsize+k] = mt0v*rot[1] + mt1v*rot[4] + mt2v*rot[7];
+       localp.z[np-tailsize+k] = mt0*rot[2] + mt1*rot[5] + mt2*rot[8];
+       localvec.z[np-tailsize+k] = mt0v*rot[2] + mt1v*rot[5] + mt2v*rot[8];
+     }
+
 }
 
 
@@ -1047,6 +1064,8 @@ void TGeoTranslation::MasterToLocal_v(StructOfCoord const & __restrict__ master,
 // convert a point by multiplying its column vector (x, y, z, 1) to matrix
   const Double_t *tr = TGeoTranslation::GetTranslation();
 
+#ifndef VC
+  /*
 #pragma ivdep
   for(Int_t k=0; k < np; k++)
     {
@@ -1054,6 +1073,23 @@ void TGeoTranslation::MasterToLocal_v(StructOfCoord const & __restrict__ master,
       local.y[k] =  master.y[k]-tr[1];
       local.z[k] =  master.z[k]-tr[2];
     }
+  */
+#else
+  for(Int_t k=0; k < np; k+=Vc::double_v::Size)
+    {
+      Vc::double_v temp(&master.x[k]);
+      temp-=tr[0];temp.store(local.x[k]);
+      Vc::double_v temp(&master.y[k]);
+      temp-=tr[1];temp.store(local.y[k]);
+      Vc::double_v temp(&master.z[k]);
+      temp-=tr[2];temp.store(local.z[k]);
+      /*
+      local.x[k] =  master.x[k]-tr[0];
+      local.y[k] =  master.y[k]-tr[1];
+      local.z[k] =  master.z[k]-tr[2];
+      */
+   }
+#endif
 }
 
 
