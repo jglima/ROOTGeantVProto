@@ -22,7 +22,7 @@
 #include "TNamed.h"
 #endif
 
-#include "PointStruct.h"
+#include "TPointStruct.h"
 
 //--- globals 
 const Double_t kNullVector[3]       =       {0.0,  0.0,  0.0};

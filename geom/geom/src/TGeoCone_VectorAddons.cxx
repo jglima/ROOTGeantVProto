@@ -2,7 +2,7 @@
 
 #ifndef __CINT__
 #include "Vc/vector.h"
-#include "PointStruct.h"
+#include "TPointStruct.h"
 #endif
 
 #include "TGeoCone.h"

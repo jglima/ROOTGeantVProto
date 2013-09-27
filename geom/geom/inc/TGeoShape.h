@@ -16,7 +16,7 @@
 #include "TNamed.h"
 #endif
 
-#include "PointStruct.h"
+#include "TPointStruct.h"
 
 // forward declarations
 class TGeoBoolCombinator;

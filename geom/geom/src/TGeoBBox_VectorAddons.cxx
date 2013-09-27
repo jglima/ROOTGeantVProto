@@ -1,6 +1,6 @@
 #ifndef __CINT__
 #include "Vc/vector.h"
-#include "PointStruct.h"
+#include "TPointStruct.h"
 typedef Vc::double_v vd; // short for vector double
 #endif
 
