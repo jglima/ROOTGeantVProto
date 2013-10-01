@@ -105,7 +105,7 @@ public:
    virtual void          SetPoints(Float_t *points) const;
    virtual void          Sizeof3D() const;
 
-#include "TGeoArb8_VectorAddons.inc"
+#include "TGeoArb8_VectorAddons.h"
    ClassDef(TGeoArb8, 1)         // arbitrary trapezoid with 8 vertices
 };
 
@@ -172,7 +172,7 @@ public:
    virtual Double_t      Safety(Double_t *point, Bool_t in=kTRUE) const;
    virtual void          SavePrimitive(std::ostream &out, Option_t *option = "");
 
-#include "TGeoTrap_VectorAddons.inc"
+#include "TGeoTrap_VectorAddons.h"
    ClassDef(TGeoTrap, 1)         // G3 TRAP shape
 };
 
@@ -217,7 +217,7 @@ public:
    virtual void          SetDimensions(Double_t *param);
    virtual void          SavePrimitive(std::ostream &out, Option_t *option = "");
 
-#include "TGeoGtra_VectorAddons.inc"
+#include "TGeoGtra_VectorAddons.h"
    ClassDef(TGeoGtra, 1)         // G3 GTRA shape
 };
 

@@ -93,7 +93,7 @@ public:
    virtual void          Sizeof3D() const;
 
 
-#include "TGeoTorus_VectorAddons.inc"
+#include "TGeoTorus_VectorAddons.h"
    ClassDef(TGeoTorus, 1)         // torus class
 
 };

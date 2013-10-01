@@ -96,7 +96,7 @@ public:
    virtual void          SetSegsAndPols(TBuffer3D &buff) const;
    virtual void          Sizeof3D() const;
 
-#include "TGeoSphere_VectorAddons.inc"
+#include "TGeoSphere_VectorAddons.h"
    ClassDef(TGeoSphere, 1)         // sphere class
 };
 

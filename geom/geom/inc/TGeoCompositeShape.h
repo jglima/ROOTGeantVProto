@@ -79,7 +79,7 @@ public:
    virtual void          SetPoints(Float_t *points) const;
    virtual void          Sizeof3D() const;
 
-#include "TGeoCompositeShape_VectorAddons.inc"
+#include "TGeoCompositeShape_VectorAddons.h"
    ClassDef(TGeoCompositeShape, 1)         // boolean composite shape
 };
 

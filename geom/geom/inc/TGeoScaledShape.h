@@ -71,7 +71,7 @@ public:
    virtual void          SetPoints(Float_t *points) const;
    virtual void          SetSegsAndPols(TBuffer3D &buffer) const;
 
-#include "TGeoScaledShape_VectorAddons.inc"
+#include "TGeoScaledShape_VectorAddons.h"
    ClassDef(TGeoScaledShape, 1)         // a scaled shape
 };
 

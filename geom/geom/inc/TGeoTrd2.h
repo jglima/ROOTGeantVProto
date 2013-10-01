@@ -79,7 +79,7 @@ public:
    void                  SetVertex(Double_t *vertex) const;
    virtual void          Sizeof3D() const;
 
-#include "TGeoTrd2_VectorAddons.inc"
+#include "TGeoTrd2_VectorAddons.h"
    ClassDef(TGeoTrd2, 1)         // TRD2 shape class
 };
 

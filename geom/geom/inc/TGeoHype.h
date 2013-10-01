@@ -111,7 +111,7 @@ public:
    virtual void          Sizeof3D() const;
 
 
-#include "TGeoHype_VectorAddons.inc"
+#include "TGeoHype_VectorAddons.h"
    ClassDef(TGeoHype, 1)         // hyperboloid class
 
 };

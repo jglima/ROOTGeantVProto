@@ -23,6 +23,25 @@ GEOMDS       := $(GEOMDS1) $(GEOMDS2)
 GEOMDO       := $(GEOMDO1) $(GEOMDO2)
 GEOMDH       := $(GEOMDS:.cxx=.h)
 
+VECADDONSH   := TGeoTranslation_VectorAddons.h TGeoArb8_VectorAddons.h TGeoBBox_VectorAddons.h \
+		TGeoCombiTrans_VectorAddons.h TGeoCompositeShape_VectorAddons.h \
+		TGeoConeSeg_VectorAddons.h TGeoCone_VectorAddons.h \
+		TGeoCtub_VectorAddons.h TGeoEltu_VectorAddons.h \
+		TGeoGtra_VectorAddons.h TGeoHalfSpace_VectorAddons.h \
+		TGeoHype_VectorAddons.h \
+		TGeoIdentity_VectorAddons.h TGeoMatrix_VectorAddons.h \
+		TGeoPara_VectorAddons.h TGeoParaboloid_VectorAddons.h \
+		TGeoPcon_VectorAddons.h	TGeoPgon_VectorAddons.h \
+		TGeoRotation_VectorAddons.h TGeoScale_VectorAddons.h \
+		TGeoScaledShape_VectorAddons.h TGeoShapeAssembly_VectorAddons.h \
+		TGeoShape_VectorAddons.h TGeoSphere_VectorAddons.h \
+		TGeoTorus_VectorAddons.h TGeoTrap_VectorAddons.h \
+		TGeoTrd1_VectorAddons.h TGeoTrd2_VectorAddons.h \
+		TGeoTubeSeg_VectorAddons.h TGeoTube_VectorAddons.h \
+		TGeoXtru_VectorAddons.h
+# TEveGeoPolyShape_VectorAddons.h
+
+
 GEOMH1       := TGeoAtt.h TGeoStateInfo.h TGeoBoolNode.h \
                 TGeoMedium.h TGeoMaterial.h \
                 TGeoMatrix.h TGeoVolume.h TGeoNode.h \
@@ -34,12 +53,18 @@ GEOMH1       := TGeoAtt.h TGeoStateInfo.h TGeoBoolNode.h \
                 TGeoScaledShape.h TVirtualGeoPainter.h TVirtualGeoTrack.h \
 		TGeoPolygon.h TGeoXtru.h TGeoPhysicalNode.h \
                 TGeoHelix.h TGeoParaboloid.h TGeoElement.h TGeoHalfSpace.h \
-                TGeoBuilder.h TGeoNavigator.h TPointStruct.h
+                TGeoBuilder.h TGeoNavigator.h TPointStruct.h 
+
 
 GEOMH2       := TGeoPatternFinder.h TGeoCache.h TVirtualMagField.h \
                 TGeoUniformMagField.h TGeoGlobalMagField.h TGeoBranchArray.h \
                 TGeoExtension.h 
+
+#these headers are not affected by cint
 GEOMH3       := TGeoRCPtr.h
+GEOMH3	     += $(VECADDONSH)
+
+
 GEOMH1       := $(patsubst %,$(MODDIRI)/%,$(GEOMH1))
 GEOMH2       := $(patsubst %,$(MODDIRI)/%,$(GEOMH2))
 GEOMH3       := $(patsubst %,$(MODDIRI)/%,$(GEOMH3))

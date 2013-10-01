@@ -101,7 +101,7 @@ public:
 
 
    // vectorized prototypes
-#include "TGeoBBox_VectorAddons.inc"
+#include "TGeoBBox_VectorAddons.h"
 
    ClassDef(TGeoBBox, 1)         // box primitive
 };

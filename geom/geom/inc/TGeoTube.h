@@ -88,7 +88,7 @@ public:
    virtual void          Sizeof3D() const;
 
    // vec stubs
-#include "TGeoTube_VectorAddons.inc"
+#include "TGeoTube_VectorAddons.h"
    ClassDef(TGeoTube, 1)         // cylindrical tube class
 
 };
@@ -164,7 +164,7 @@ public:
    virtual void          Sizeof3D() const;
 
    // vec stubs
-#include "TGeoTubeSeg_VectorAddons.inc"
+#include "TGeoTubeSeg_VectorAddons.h"
 
    ClassDef(TGeoTubeSeg, 1)         // cylindrical tube segment class 
 };
@@ -229,7 +229,7 @@ public:
    virtual void          SetPoints(Float_t *points) const;
 
    // vec stubs
-#include "TGeoCtub_VectorAddons.inc"
+#include "TGeoCtub_VectorAddons.h"
 
    ClassDef(TGeoCtub, 1)         // cut tube segment class 
 };

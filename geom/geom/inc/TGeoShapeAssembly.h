@@ -65,7 +65,7 @@ public:
    virtual void          SetSegsAndPols(TBuffer3D &buff) const;
 
 
-#include "TGeoShapeAssembly_VectorAddons.inc"
+#include "TGeoShapeAssembly_VectorAddons.h"
    ClassDef(TGeoShapeAssembly, 2)         // assembly shape
 };
 

@@ -178,7 +178,7 @@ public:
 
 
    // vector_stubs
-#include "TGeoShape_VectorAddons.inc"
+#include "TGeoShape_VectorAddons.h"
    
    ClassDef(TGeoShape, 2)           // base class for shapes
 };

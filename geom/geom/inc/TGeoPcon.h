@@ -110,7 +110,7 @@ public:
    virtual void          Sizeof3D() const;
 
    // vec stubs
-#include "TGeoPcon_VectorAddons.inc"
+#include "TGeoPcon_VectorAddons.h"
    ClassDef(TGeoPcon, 1)         // polycone class 
 };
 

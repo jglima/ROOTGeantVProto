@@ -101,7 +101,7 @@ public:
    virtual void          Sizeof3D() const;
 
    // vec prototype
-#include "TGeoCone_VectorAddons.inc"
+#include "TGeoCone_VectorAddons.h"
 
 
    ClassDef(TGeoCone, 1)         // conical tube class
@@ -182,7 +182,7 @@ public:
    virtual void          Sizeof3D() const;
 
    // vector stubs
-#include "TGeoConeSeg_VectorAddons.inc"
+#include "TGeoConeSeg_VectorAddons.h"
 
    ClassDef(TGeoConeSeg, 1)         // conical tube segment class 
 };

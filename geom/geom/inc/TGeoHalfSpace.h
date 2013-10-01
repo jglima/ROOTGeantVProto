@@ -66,7 +66,7 @@ public:
    virtual void          SetPoints(Float_t * /*points*/) const {;}
    virtual void          Sizeof3D() const {;}
 
-#include "TGeoHalfSpace_VectorAddons.inc"
+#include "TGeoHalfSpace_VectorAddons.h"
    ClassDef(TGeoHalfSpace, 1)         // half-space class
 };
 

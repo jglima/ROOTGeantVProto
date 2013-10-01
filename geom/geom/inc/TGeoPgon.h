@@ -89,7 +89,7 @@ public:
    virtual void          Sizeof3D() const;
 
    // vec stubs
-#include "TGeoPgon_VectorAddons.inc"
+#include "TGeoPgon_VectorAddons.h"
    ClassDef(TGeoPgon, 1)         // polygone class 
 };
 

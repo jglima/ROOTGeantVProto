@@ -119,7 +119,7 @@ public:
    virtual void          SetSegsAndPols(TBuffer3D &buff) const;
    virtual void          Sizeof3D() const;
 
-#include "TGeoXtru_VectorAddons.inc"
+#include "TGeoXtru_VectorAddons.h"
    ClassDef(TGeoXtru, 3)         // extruded polygon class 
 };
 

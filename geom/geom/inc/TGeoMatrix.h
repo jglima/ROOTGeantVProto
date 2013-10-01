@@ -119,7 +119,7 @@ public :
    void                 SetShared(Bool_t flag=kTRUE) {SetBit(kGeoShared, flag);}
    
    // vec stubs
-#include "TGeoMatrix_VectorAddons.inc"   
+#include "TGeoMatrix_VectorAddons.h"   
    ClassDef(TGeoMatrix, 1)                 // base geometrical transformation class
 };
 
@@ -173,7 +173,7 @@ public :
    virtual const Double_t    *GetRotationMatrix() const {return &kIdentityMatrix[0];}
    virtual const Double_t    *GetScale()       const {return &kUnitScale[0];}
 
-#include "TGeoTranslation_VectorAddons.inc"   
+#include "TGeoTranslation_VectorAddons.h"   
    ClassDef(TGeoTranslation, 1)                 // translation class
 };
 
@@ -241,7 +241,7 @@ public :
 
 
   // vec stubs ( outer loop )
-#include "TGeoRotation_VectorAddons.inc"   
+#include "TGeoRotation_VectorAddons.h"   
    ClassDef(TGeoRotation, 1)               // rotation class
 };
 
@@ -286,7 +286,7 @@ public :
 
 
   // vec stubs
-#include "TGeoScale_VectorAddons.inc"   
+#include "TGeoScale_VectorAddons.h"   
    ClassDef(TGeoScale, 1)                 // scaling class
 };
 
@@ -344,7 +344,7 @@ public :
 
 
   // vec stubs
-#include "TGeoCombiTrans_VectorAddons.inc"   
+#include "TGeoCombiTrans_VectorAddons.h"   
    ClassDef(TGeoCombiTrans, 1)            // rotation + translation
 };
 
@@ -413,7 +413,7 @@ public :
 
 
   // vec stubs
-#include "TGeoIdentity_VectorAddons.inc"   
+#include "TGeoIdentity_VectorAddons.h"   
    ClassDef(TGeoIdentity, 1)                 // identity transformation class
 };
 

@@ -78,7 +78,7 @@ public:
    virtual void          Sizeof3D() const;
 
 
-#include "TGeoTrd1_VectorAddons.inc"
+#include "TGeoTrd1_VectorAddons.h"
    ClassDef(TGeoTrd1, 1)         // TRD1 shape class
 };
 

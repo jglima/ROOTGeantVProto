@@ -65,7 +65,7 @@ public:
    virtual void          SetPoints(Float_t *points) const;
 
    // vec stub
-#include "TGeoEltu_VectorAddons.inc"
+#include "TGeoEltu_VectorAddons.h"
    ClassDef(TGeoEltu, 1)         // elliptical tube class
 
 };

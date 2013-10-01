@@ -85,7 +85,7 @@ public:
    virtual void          SetPoints(Float_t *points) const;
    virtual void          Sizeof3D() const;
 
-#include "TGeoPara_VectorAddons.inc"
+#include "TGeoPara_VectorAddons.h"
    ClassDef(TGeoPara, 1)         // box primitive
 };
 
