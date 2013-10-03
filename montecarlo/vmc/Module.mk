@@ -37,6 +37,8 @@ ALLMAPS     += $(VMCMAP)
 INCLUDEFILES += $(VMCDEP)
 
 ##### local rules #####
+${VMCO} ${VMCDO} : CXXFLAGS+=$(VCINCFLAGS)
+
 .PHONY:         all-$(MODNAME) clean-$(MODNAME) distclean-$(MODNAME)
 
 include/%.h:    $(VMCDIRI)/%.h
@@ -44,7 +46,7 @@ include/%.h:    $(VMCDIRI)/%.h
 
 $(VMCLIB):      $(VMCO) $(VMCDO) $(ORDER_) $(MAINLIBS) $(VMCLIBDEP)
 		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
-		   "$(SOFLAGS)" libVMC.$(SOEXT) $@ "$(VMCO) $(VMCDO)" \
+		   "$(SOFLAGS)" libVMC.$(SOEXT) $@ "$(VMCO) $(VMCDO) $(VCLIBFLAGS)" \
 		   "$(VMCLIBEXTRA)"
 
 $(VMCDS):       $(VMCH1) $(VMCL) $(ROOTCINTTMPDEP)

@@ -62,6 +62,8 @@ ALLMAPS     += $(EVEMAP)
 INCLUDEFILES += $(EVEDEP)
 
 ##### local rules #####
+${EVEO} ${EVEDO} : CXXFLAGS+=$(VCINCFLAGS)
+
 .PHONY:         all-$(MODNAME) clean-$(MODNAME) distclean-$(MODNAME)
 
 include/%.h:    $(EVEDIRI)/%.h
@@ -72,7 +74,7 @@ $(EVELIB):      $(EVEO) $(EVEDO) $(ORDER_) $(MAINLIBS) $(EVELIBDEP) \
 		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
 		   "$(SOFLAGS)" libEve.$(SOEXT) $@ "$(EVEO) $(EVEDO)" \
 		   "$(EVELIBEXTRA) $(FTGLLIBDIR) $(FTGLLIBS) \
-		    $(GLEWLIBDIR) $(GLEWLIBS) $(GLLIBS)"
+		    $(GLEWLIBDIR) $(GLEWLIBS) $(GLLIBS) $(VCLIBFLAGS)"
 
 $(EVEDS1):      $(EVEH1) $(EVEL1) $(ROOTCINTTMPDEP)
 		$(MAKEDIR)

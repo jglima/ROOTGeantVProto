@@ -41,6 +41,8 @@ ALLMAPS     += $(G3DMAP)
 INCLUDEFILES += $(G3DDEP)
 
 ##### local rules #####
+${G3DO} ${G3DOH} : CXXFLAGS+=$(VCINCFLAGS)
+
 .PHONY:         all-$(MODNAME) clean-$(MODNAME) distclean-$(MODNAME)
 
 include/%.h:    $(G3DDIRI)/%.h
@@ -49,7 +51,7 @@ include/%.h:    $(G3DDIRI)/%.h
 $(G3DLIB):      $(G3DO) $(G3DDO) $(ORDER_) $(MAINLIBS) $(G3DLIBDEP)
 		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
 		   "$(SOFLAGS)" libGraf3d.$(SOEXT) $@ "$(G3DO) $(G3DDO)" \
-		   "$(G3DLIBEXTRA)"
+		   "$(G3DLIBEXTRA) $(VCLIBFLAGS)"
 
 $(G3DDS):       $(G3DH1) $(G3DL) $(ROOTCINTTMPDEP)
 		$(MAKEDIR)

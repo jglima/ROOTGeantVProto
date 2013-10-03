@@ -36,6 +36,8 @@ ALLMAPS      += $(GDMLMAP)
 INCLUDEFILES += $(GDMLDEP)
 
 ##### local rules #####
+${GDMLDO} ${GDMLO} : CXXFLAGS += ${VCINCFLAGS}
+
 .PHONY:         all-$(MODNAME) clean-$(MODNAME) distclean-$(MODNAME)
 
 include/%.h:    $(GDMLDIRI)/%.h
@@ -44,7 +46,7 @@ include/%.h:    $(GDMLDIRI)/%.h
 $(GDMLLIB):     $(GDMLO) $(GDMLDO) $(ORDER_) $(MAINLIBS) $(GDMLLIBDEP)
 		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
 		   "$(SOFLAGS)" libGdml.$(SOEXT) $@ "$(GDMLO) $(GDMLDO)" \
-		   "$(GDMLLIBEXTRA)"
+		   "$(GDMLLIBEXTRA)" "$(VCLIBFLAGS)"
 
 $(GDMLDS):      $(GDMLH) $(GDMLL) $(ROOTCINTTMPDEP)
 		$(MAKEDIR)

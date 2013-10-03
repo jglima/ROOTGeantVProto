@@ -223,6 +223,7 @@ MINUIT2          \
 TABLE            \
 XMLDIR           \
 ROOTDICTTYPE     \
+VCDIR            \
 "
 configenvvars=
 for c in $envvars ; do
@@ -3794,6 +3795,26 @@ check_explicit "$enable_pythia6" "$enable_pythia6_explicit" \
 
 ######################################################################
 #
+### echo %%% VC  Usage - Third party libraries
+#
+# (See http://root.cern.ch and Lund)
+#
+# Check for libVc.a and Vc include files
+#
+vcdir=${VCDIR}
+check_library "libVc" "static_only" "${vcdir}/lib" /usr/local
+vclib=$found_lib
+vcincflags="-I${VCDIR}/include -std=c++11 -fabi-version=6"
+vclibflags="${found_dir} ${vclib}"
+if test "x$vclib" = "x"; then
+    echo "Vc library not found; please install and set environment variable VCDIR to the vc directory"
+    exit 0
+else
+    echo "found Vc lib ${vclib} in $vclibdir, ${vcincdir}"
+fi
+
+######################################################################
+#
 ### echo %%% Pythia8  Usage - Third party libraries
 #
 # (See http://root.cern.ch and Lund)
@@ -6650,6 +6671,8 @@ sed -e "s|@aclocaldir@|$aclocaldir|"            \
     -e "s|@glitelib@|$glitelib|"                \
     -e "s|@glitelibdir@|$glitelibdir|"          \
     -e "s|@gaw_cppflags@|$gaw_cppflags|"        \
+    -e "s|@vcincflags@|$vcincflags|"            \
+    -e "s|@vclibflags@|$vclibflags|"            \
         < Makefile.tmp > Makefile.tmpp
 mv Makefile.tmpp Makefile.tmp
 

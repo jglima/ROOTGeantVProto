@@ -74,7 +74,7 @@ GEOMO        := $(call stripsrc,$(GEOMS:.cxx=.o))
 
 GEOMDEP      := $(GEOMO:.o=.d) $(GEOMDO:.o=.d)
 
-GEOMLIB      := $(LPATH)/libGeantVGeom.$(SOEXT)
+GEOMLIB      := $(LPATH)/libGeom.$(SOEXT)
 GEOMMAP      := $(GEOMLIB:.$(SOEXT)=.rootmap)
 
 # used in the main Makefile
@@ -89,8 +89,8 @@ INCLUDEFILES += $(GEOMDEP)
 
 
 ##### local rules #####
-$(GEOMO) : CXXFLAGS += -I/home/swenzel/local/vc/include -std=c++11 -fabi-version=6 -ffast-math -ftree-vectorize  -mavx -funroll-loops -finline-functions -findirect-inlining -finline-limit=100000
-$(GEOMDO): CXXFLAGS += -I/home/swenzel/local/vc/include -std=c++11 -fabi-version=6
+$(GEOMO) : CXXFLAGS += ${VCINCFLAGS} -ffast-math -ftree-vectorize  -mavx -funroll-loops -finline-functions -findirect-inlining -finline-limit=100000
+$(GEOMDO): CXXFLAGS += ${VCINCFLAGS}
 
 #$(GEOMO): CXXFLAGS += -I/home/swenzel/local/vc/include -std=c++11 -fabi-version=6 -Ofast -vec-report=2 -msse4.2
 
@@ -101,8 +101,9 @@ include/%.h:    $(GEOMDIRI)/%.h
 
 $(GEOMLIB):     $(GEOMO) $(GEOMDO) $(ORDER_) $(MAINLIBS) $(GEOMLIBDEP)
 		@$(MAKELIB) $(PLATFORM) $(LD) "$(LDFLAGS)" \
-		   "$(SOFLAGS)" libGeantVGeom.$(SOEXT) $@ "$(GEOMO) $(GEOMDO)" \
-		   "$(GEOMLIBEXTRA) /home/swenzel/local/vc/lib/libVc.a $(OSTHREADLIBDIR) $(OSTHREADLIB)"
+		   "$(SOFLAGS)" libGeom.$(SOEXT) $@ "$(GEOMO) $(GEOMDO)" \
+		   "$(GEOMLIBEXTRA) $(VCLIBFLAGS) $(OSTHREADLIBDIR) $(OSTHREADLIB)"
+		cp $(GEOMLIB) $(LPATH)/libGeantVGeom.$(SOEXT)
 
 $(GEOMDS1):     $(GEOMH1) $(GEOML1) $(ROOTCINTTMPDEP)
 		$(MAKEDIR)

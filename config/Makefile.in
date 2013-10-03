@@ -353,6 +353,9 @@ GCCXML         := @gccxml@
 
 ROOTDICTTYPE   := @dicttype@
 
+VCINCFLAGS     := @vcincflags@	
+VCLIBFLAGS     := @vclibflags@	
+
 INSTALL        := cp -dpR
 INSTALLDATA    := cp -dpR
 INSTALLDIR     := mkdir -p
