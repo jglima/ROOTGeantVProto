@@ -41,7 +41,7 @@ ALLMAPS     += $(G3DMAP)
 INCLUDEFILES += $(G3DDEP)
 
 ##### local rules #####
-${G3DO} ${G3DOH} : CXXFLAGS+=$(VCINCFLAGS)
+${G3DO} ${G3DOH} : CXXFLAGS+=$(VCINCFLAGS) -mavx
 
 .PHONY:         all-$(MODNAME) clean-$(MODNAME) distclean-$(MODNAME)
 

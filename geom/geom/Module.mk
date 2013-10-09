@@ -89,8 +89,16 @@ INCLUDEFILES += $(GEOMDEP)
 
 
 ##### local rules #####
+
+ifeq ($(CXX),g++) 
 $(GEOMO) : CXXFLAGS += ${VCINCFLAGS} -ffast-math -ftree-vectorize  -mavx -funroll-loops -finline-functions -findirect-inlining -finline-limit=100000
 $(GEOMDO): CXXFLAGS += ${VCINCFLAGS}
+endif
+
+ifeq ($(CXX),icc) 
+$(GEOMO) $(GEOMDO) : CXXFLAGS += ${VCINCFLAGS} -mavx 
+endif
+
 
 #$(GEOMO): CXXFLAGS += -I/home/swenzel/local/vc/include -std=c++11 -fabi-version=6 -Ofast -vec-report=2 -msse4.2
 

@@ -62,7 +62,7 @@ ALLMAPS     += $(EVEMAP)
 INCLUDEFILES += $(EVEDEP)
 
 ##### local rules #####
-${EVEO} ${EVEDO} : CXXFLAGS+=$(VCINCFLAGS)
+${EVEO} ${EVEDO} : CXXFLAGS+=$(VCINCFLAGS) -mavx
 
 .PHONY:         all-$(MODNAME) clean-$(MODNAME) distclean-$(MODNAME)
 

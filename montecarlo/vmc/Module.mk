@@ -37,7 +37,7 @@ ALLMAPS     += $(VMCMAP)
 INCLUDEFILES += $(VMCDEP)
 
 ##### local rules #####
-${VMCO} ${VMCDO} : CXXFLAGS+=$(VCINCFLAGS)
+${VMCO} ${VMCDO} : CXXFLAGS+=$(VCINCFLAGS) -mavx
 
 .PHONY:         all-$(MODNAME) clean-$(MODNAME) distclean-$(MODNAME)
 

@@ -36,7 +36,7 @@ ALLMAPS      += $(GDMLMAP)
 INCLUDEFILES += $(GDMLDEP)
 
 ##### local rules #####
-${GDMLDO} ${GDMLO} : CXXFLAGS += ${VCINCFLAGS}
+${GDMLDO} ${GDMLO} : CXXFLAGS += ${VCINCFLAGS} -mavx
 
 .PHONY:         all-$(MODNAME) clean-$(MODNAME) distclean-$(MODNAME)
 
